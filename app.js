@@ -1,13 +1,18 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-var ldaRouter = require('./routes/lda');
-var twitterRouter = require('./routes/twitter');
+const dbConfig = require('./config/db');
+mongoose.connect(dbConfig.url, {useNewUrlParser: true, useUnifiedTopology: true});
 
-var app = express();
+const ldaRouter = require('./routes/lda');
+const twitterRouter = require('./routes/twitter');
+
+const app = express();
 
 // view engine setup
 //app.set('views', path.join(__dirname, 'views'));
