@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
 require('dotenv').config();
+//const cors = require('cors');
 
 const dbConfig = require('./config/db');
 mongoose.connect(dbConfig.url, {useNewUrlParser: true, useUnifiedTopology: true});
@@ -27,9 +28,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/ldaModel', ldaRouter);
 app.use('/twitter', twitterRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+//app.use(cors());
+
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, './public/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
 });
 
 // error handler
