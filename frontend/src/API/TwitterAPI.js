@@ -8,10 +8,10 @@ const getTweets = (callback) => {
     return res.data;
   })
   .then((data) => {
-    callback(data);
+    callback(data, null);
   })
   .catch((err) => {
-    callback(err);
+    callback(null, err);
   })
 }
 
@@ -21,10 +21,10 @@ const getUsers = (callback) => {
     return res.data;
   })
   .then((data) => {
-    callback(data);
+    callback(data, null);
   })
   .catch((err) => {
-    callback(err);
+    callback(null, err);
   });
 }
 

@@ -50,12 +50,12 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
   const classes = useStyles();
-  getUsers((data) => {
-    console.log(data);
-  });
-  executeLDAModel(({topics: 5}), (data) => {
-    console.log(data);
-  });
+  // getUsers((data) => {
+  //   console.log(data);
+  // });
+  // executeLDAModel(({topics: 5}), (data) => {
+  //   console.log(data);
+  // });
   return (
     <div>
       <GridContainer>

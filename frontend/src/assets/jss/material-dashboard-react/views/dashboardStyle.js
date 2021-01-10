@@ -1,5 +1,6 @@
 import {
   successColor,
+  infoColor,
   whiteColor,
   grayColor,
   hexToRgb
@@ -8,6 +9,9 @@ import {
 const dashboardStyle = {
   successText: {
     color: successColor[0]
+  },
+  infoText: {
+    color: infoColor[0]
   },
   upArrowCardCategory: {
     width: "16px",
