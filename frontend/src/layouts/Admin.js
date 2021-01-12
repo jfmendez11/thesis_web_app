@@ -5,13 +5,34 @@ import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
+// @material-ui/icons
+import Dashboard from "@material-ui/icons/Dashboard";
+import Person from "@material-ui/icons/Person";
+import LibraryBooks from "@material-ui/icons/LibraryBooks";
+import BubbleChart from "@material-ui/icons/BubbleChart";
+import LocationOn from "@material-ui/icons/LocationOn";
+import Notifications from "@material-ui/icons/Notifications";
+import Unarchive from "@material-ui/icons/Unarchive";
+import Language from "@material-ui/icons/Language";
+import Home from "@material-ui/icons/Home";
 // core components
 import Navbar from "components/Navbars/Navbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
-
-import routes from "routes.js";
+import HomePage from "../views/Home/Home.js";
+import ModelDashboardPage from "../views/ModelDashboard/ModelDashboard.js";
+import DashboardPage from "../views/Dashboard/Dashboard.js";
+import UserProfile from "../views/UserProfile/UserProfile.js";
+import TableList from "../views/TableList/TableList.js";
+import Typography from "../views/Typography/Typography.js";
+import Icons from "../views/Icons/Icons.js";
+import Maps from "../views/Maps/Maps.js";
+import NotificationsPage from "../views/Notifications/Notifications.js";
+import UpgradeToPro from "../views/UpgradeToPro/UpgradeToPro.js";
+// core components/views for RTL layout
+import RTLPage from "../views/RTLPage/RTLPage.js";
+//import routes from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
@@ -19,24 +40,6 @@ import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
 
 let ps;
-
-const switchRoutes = (
-  <Switch>
-    {routes.map((prop, key) => {
-      if (prop.layout === "/admin") {
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        );
-      }
-      return null;
-    })}
-    <Redirect from="/admin" to="/admin/dashboard" />
-  </Switch>
-);
 
 const useStyles = makeStyles(styles);
 
@@ -46,23 +49,104 @@ export default function Admin({ ...rest }) {
   // ref to help us initialize PerfectScrollbar on windows devices
   const mainPanel = React.createRef();
   // states and functions
-  const [image, setImage] = React.useState(bgImage);
   const [color, setColor] = React.useState("blue");
-  const [fixedClasses, setFixedClasses] = React.useState("dropdown show");
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  const handleImageClick = image => {
-    setImage(image);
-  };
-  const handleColorClick = color => {
-    setColor(color);
-  };
-  const handleFixedClick = () => {
-    if (fixedClasses === "dropdown") {
-      setFixedClasses("dropdown show");
-    } else {
-      setFixedClasses("dropdown");
-    }
-  };
+  const [isDashboardDisabled, setIsDashboardDisabled] = React.useState(true);
+  const [parameters, setParameters] = React.useState({});
+
+  const executeModel = (modelParameters) => {
+    console.log(modelParameters);
+    setIsDashboardDisabled(false);
+    modelParameters.accounts = Object.keys(modelParameters.accounts).join(" ");
+    setParameters(modelParameters);
+  }
+
+  const routes = [
+    {
+      path: "/home",
+      name: "Home",
+      rtlName: "millos",
+      icon: Home,
+      component: () => <HomePage executeModel={executeModel}/>,
+      layout: "/admin"
+    },
+    {
+      path: "/dashboard",
+      name: "Dashboard",
+      rtlName: "millos",
+      icon: Dashboard,
+      component: () => <ModelDashboardPage parameters={parameters}/>,
+      layout: "/admin",
+      disabled: isDashboardDisabled,
+    },
+    {
+      path: "/dashboard2",
+      name: "Dashboard2",
+      rtlName: "لوحة القيادة",
+      icon: Dashboard,
+      component: DashboardPage,
+      layout: "/admin"
+    },
+    {
+      path: "/user",
+      name: "User Profile",
+      rtlName: "ملف تعريفي للمستخدم",
+      icon: Person,
+      component: UserProfile,
+      layout: "/admin"
+    },
+    {
+      path: "/table",
+      name: "Table List",
+      rtlName: "قائمة الجدول",
+      icon: "content_paste",
+      component: TableList,
+      layout: "/admin"
+    },
+    {
+      path: "/typography",
+      name: "Typography",
+      rtlName: "طباعة",
+      icon: LibraryBooks,
+      component: Typography,
+      layout: "/admin"
+    },
+    {
+      path: "/icons",
+      name: "Icons",
+      rtlName: "الرموز",
+      icon: BubbleChart,
+      component: Icons,
+      layout: "/admin"
+    },
+    {
+      path: "/notifications",
+      name: "Notifications",
+      rtlName: "إخطارات",
+      icon: Notifications,
+      component: NotificationsPage,
+      layout: "/admin"
+    },
+  ];
+
+  const switchRoutes = (
+    <Switch>
+      {routes.map((prop, key) => {
+        if (prop.layout === "/admin") {
+          return (
+            <Route
+              path={prop.layout + prop.path}
+              component={prop.component}
+              key={key}
+            />
+          );
+        }
+        return null;
+      })}
+      <Redirect from="/admin" to="/admin/dashboard" />
+    </Switch>
+  );
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -98,7 +182,6 @@ export default function Admin({ ...rest }) {
         routes={routes}
         logoText={"Modelado de Tópicos\nTwits Uniandes"}
         logo={logo}
-        image={image}
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}
@@ -119,14 +202,6 @@ export default function Admin({ ...rest }) {
           <div className={classes.map}>{switchRoutes}</div>
         )}
         {getRoute() ? <Footer /> : null}
-        <FixedPlugin
-          handleImageClick={handleImageClick}
-          handleColorClick={handleColorClick}
-          bgColor={color}
-          bgImage={image}
-          handleFixedClick={handleFixedClick}
-          fixedClasses={fixedClasses}
-        />
       </div>
     </div>
   );

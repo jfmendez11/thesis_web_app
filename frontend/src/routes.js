@@ -50,6 +50,14 @@ const dashboardRoutes = [
   {
     path: "/dashboard",
     name: "Dashboard",
+    rtlName: "millos",
+    icon: Dashboard,
+    component: DashboardPage,
+    layout: "/admin",
+  },
+  {
+    path: "/dashboard2",
+    name: "Dashboard2",
     rtlName: "لوحة القيادة",
     icon: Dashboard,
     component: DashboardPage,

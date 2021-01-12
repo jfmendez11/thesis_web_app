@@ -25,7 +25,7 @@ export default function Sidebar(props) {
   function activeRoute(routeName) {
     return window.location.href.indexOf(routeName) > -1 ? true : false;
   }
-  const { color, logo, image, logoText, routes } = props;
+  const { color, logo, logoText, routes } = props;
   var links = (
     <List className={classes.list}>
       {routes.map((prop, key) => {
@@ -44,14 +44,15 @@ export default function Sidebar(props) {
         const whiteFontClasses = classNames({
           [" " + classes.whiteFont]: activeRoute(prop.layout + prop.path)
         });
+        
         return (
           <NavLink
-            to={prop.layout + prop.path}
+            to={prop.disabled ? prop.layout + "/home" : prop.layout + prop.path}
             className={activePro + classes.item}
             activeClassName="active"
             key={key}
           >
-            <ListItem button className={classes.itemLink + listItemClasses}>
+            <ListItem button disabled={prop.disabled} className={classes.itemLink + listItemClasses}>
               {typeof prop.icon === "string" ? (
                 <Icon
                   className={classNames(classes.itemIcon, whiteFontClasses, {
@@ -118,12 +119,7 @@ export default function Sidebar(props) {
             {props.rtlActive ? <RTLNavbarLinks /> : <AdminNavbarLinks />}
             {links}
           </div>
-          {image !== undefined ? (
-            <div
-              className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
-            />
-          ) : null}
+            <div className={classes.background}/>
         </Drawer>
       </Hidden>
       <Hidden smDown implementation="css">
@@ -139,12 +135,7 @@ export default function Sidebar(props) {
         >
           {brand}
           <div className={classes.sidebarWrapper}>{links}</div>
-          {image !== undefined ? (
-            <div
-              className={classes.background}
-              style={{ backgroundImage: "url(" + image + ")" }}
-            />
-          ) : null}
+            <div className={classes.background}/>
         </Drawer>
       </Hidden>
     </div>

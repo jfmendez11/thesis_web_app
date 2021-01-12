@@ -10,10 +10,13 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
+import { Link } from "react-router-dom";
+
 // @material-ui/icons
 import Warning from "@material-ui/icons/Warning";
 import VerifiedUserRounded from "@material-ui/icons/VerifiedUserSharp";
 import InfoIcon from "@material-ui/icons/Info";
+import Check from "@material-ui/icons/Check";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -30,7 +33,7 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
-import Check from "@material-ui/icons/Check";
+import Button from "components/CustomButtons/Button.js";
 // API Methods
 import {
   getTweets,
@@ -73,49 +76,6 @@ const renderInformationCard = (classes) => {
         </GridContainer>
       </CardBody>
     </Card>
-  );
-}
-
-const renderDatePickers = (handleDateChange) => {
-  return (
-    <MuiPickersUtilsProvider utils={MomentUtils}>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={6}>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="DD/MM/yyyy"
-            margin="normal"
-            id="date-picker-start"
-            label="Fecha desde"
-            value={new Date('2020-03-03T00:00:00')}
-            minDate={new Date('2020-03-03T00:00:00')}
-            maxDate={new Date()}
-            onChange={(date, value) => handleDateChange(value, true)}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-        </GridItem>
-        <GridItem xs={12} sm={12} md={6}>
-          <KeyboardDatePicker
-            disableToolbar
-            variant="inline"
-            format="DD/MM/yyyy"
-            margin="normal"
-            id="date-picker-end"
-            label="Fecha hasta"
-            value={new Date()}
-            minDate={new Date('2020-03-03T00:00:00')}
-            maxDate={new Date()}
-            onChange={(date, value) => handleDateChange(value, false)}
-            KeyboardButtonProps={{
-              'aria-label': 'change date',
-            }}
-          />
-        </GridItem>
-      </GridContainer>
-    </MuiPickersUtilsProvider>
   );
 }
 
@@ -169,6 +129,49 @@ const renderParameterSelector = (users, accounts, handleToggle, onChange, classe
           ]} 
         />
       </GridItem>
+  );
+}
+
+const renderDatePickers = (handleDateChange) => {
+  return (
+    <MuiPickersUtilsProvider utils={MomentUtils}>
+      <GridContainer>
+        <GridItem xs={12} sm={12} md={6}>
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="DD/MM/yyyy"
+            margin="normal"
+            id="date-picker-start"
+            label="Fecha desde"
+            value={new Date('2020-03-03T00:00:00')}
+            minDate={new Date('2020-03-03T00:00:00')}
+            maxDate={new Date()}
+            onChange={(date, value) => handleDateChange(value, true)}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+        </GridItem>
+        <GridItem xs={12} sm={12} md={6}>
+          <KeyboardDatePicker
+            disableToolbar
+            variant="inline"
+            format="DD/MM/yyyy"
+            margin="normal"
+            id="date-picker-end"
+            label="Fecha hasta"
+            value={new Date()}
+            minDate={new Date('2020-03-03T00:00:00')}
+            maxDate={new Date()}
+            onChange={(date, value) => handleDateChange(value, false)}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+        </GridItem>
+      </GridContainer>
+    </MuiPickersUtilsProvider>
   );
 }
 
@@ -248,7 +251,7 @@ const createUserGrid = (user, accounts, handleToggle, classes) => {
           <div className={classes.stats}>
             <Danger>
               <Checkbox
-                checked={accounts[`@${user.screen_name}`]}
+                checked={accounts[user.screen_name]}
                 tabIndex={-1}
                 onClick={() => handleToggle(user)}
                 checkedIcon={<Check className={classes.checkedIcon} />}
@@ -267,7 +270,7 @@ const createUserGrid = (user, accounts, handleToggle, classes) => {
   );
 }
 
-export default function Home() {
+export default function Home(props) {
   const classes = useStyles();
   const [users, setUsers] = React.useState([]);
   const [parameters, setParameters] = React.useState({});
@@ -288,7 +291,7 @@ export default function Home() {
 
   const handleToggle = (user) => {
     let accounts = parameters.accounts;
-    accounts[`@${user.screen_name}`] = !accounts[`@${user.screen_name}`];
+    accounts[user.screen_name] = !accounts[user.screen_name];
     setParameters({
       ...parameters,
       ["accounts"]: accounts,
@@ -300,7 +303,7 @@ export default function Home() {
       if(!err) {
         let accounts = {};
         data.map((user) => {
-          accounts[`@${user.screen_name}`] = true
+          accounts[user.screen_name] = true
         });
         setParameters({accounts});
         setUsers(data);
@@ -314,6 +317,18 @@ export default function Home() {
         {renderParameterSelector(users, parameters.accounts, handleToggle, handleParameterChange, classes)}
         {renderSelectedParameters(parameters, classes)}
       </GridContainer>
+      <div className="fixed-plugin">
+        <Link to="/admin/dashboard">
+      <Button
+        round
+        disabled={!parameters.topics}
+        color="primary"
+        onClick={() => props.executeModel(parameters)}
+      >
+        Ejecutar Modelo
+      </Button>
+      </Link>
+      </div>
       {/*<GridContainer>
         {users.map((user) => (
           createUserGrid(user, classes)
