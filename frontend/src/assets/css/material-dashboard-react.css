@@ -243,7 +243,8 @@ footer ul li a:hover {
   font-weight: 300;
   line-height: 1.5em;
   position: fixed;
-  top: 500px;
+  /*top: 500px;*/
+  bottom: 120px;
   right: 0;
   /*width: 64px;*/
   /*background: rgba(0, 0, 0, 0.3);*/

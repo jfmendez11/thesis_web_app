@@ -13,18 +13,17 @@ import {
 import { Link } from "react-router-dom";
 
 // @material-ui/icons
-import Warning from "@material-ui/icons/Warning";
 import VerifiedUserRounded from "@material-ui/icons/VerifiedUserSharp";
 import InfoIcon from "@material-ui/icons/Info";
+import TopicsIcon from "@material-ui/icons/PermDataSetting";
+import CalendarIcon from "@material-ui/icons/DateRange";
+import ProfileIcon from "@material-ui/icons/SupervisedUserCircle";
 import Check from "@material-ui/icons/Check";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
 import Danger from "components/Typography/Danger.js";
-import Info from "components/Typography/Info.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
@@ -88,7 +87,7 @@ const renderParameterSelector = (users, accounts, handleToggle, onChange, classe
           tabs={[
             {
               tabName: "NO. DE TÓPICOS*",
-              tabIcon: InfoIcon,
+              tabIcon: TopicsIcon,
               tabContent: (
                 <GridContainer>
                   <GridItem xs={12} sm={12} md={6}>
@@ -110,14 +109,14 @@ const renderParameterSelector = (users, accounts, handleToggle, onChange, classe
             },
             {
               tabName: "FECHAS",
-              tabIcon: InfoIcon,
+              tabIcon: CalendarIcon,
               tabContent: (
                 renderDatePickers(onChange)
               )
             },
             {
               tabName: "CUENTAS",
-              tabIcon: InfoIcon,
+              tabIcon: ProfileIcon,
               tabContent: (
                 <GridContainer>
                   {users.map((user) => (
@@ -317,18 +316,17 @@ export default function Home(props) {
         {renderParameterSelector(users, parameters.accounts, handleToggle, handleParameterChange, classes)}
         {renderSelectedParameters(parameters, classes)}
       </GridContainer>
-      <div className="fixed-plugin">
+      {parameters.topics ? <div className="fixed-plugin">
         <Link to="/admin/dashboard">
-      <Button
-        round
-        disabled={!parameters.topics}
-        color="primary"
-        onClick={() => props.executeModel(parameters)}
-      >
-        Ejecutar Modelo
-      </Button>
-      </Link>
-      </div>
+          <Button
+            round
+            color="primary"
+            onClick={() => props.executeModel(parameters)}
+          >
+            Ejecutar Modelo
+          </Button>
+        </Link>
+      </div> : <div></div>}
       {/*<GridContainer>
         {users.map((user) => (
           createUserGrid(user, classes)

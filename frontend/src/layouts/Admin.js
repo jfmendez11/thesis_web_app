@@ -19,7 +19,6 @@ import Home from "@material-ui/icons/Home";
 import Navbar from "components/Navbars/Navbar.js";
 import Footer from "components/Footer/Footer.js";
 import Sidebar from "components/Sidebar/Sidebar.js";
-import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 import HomePage from "../views/Home/Home.js";
 import ModelDashboardPage from "../views/ModelDashboard/ModelDashboard.js";
 import DashboardPage from "../views/Dashboard/Dashboard.js";
@@ -27,11 +26,7 @@ import UserProfile from "../views/UserProfile/UserProfile.js";
 import TableList from "../views/TableList/TableList.js";
 import Typography from "../views/Typography/Typography.js";
 import Icons from "../views/Icons/Icons.js";
-import Maps from "../views/Maps/Maps.js";
 import NotificationsPage from "../views/Notifications/Notifications.js";
-import UpgradeToPro from "../views/UpgradeToPro/UpgradeToPro.js";
-// core components/views for RTL layout
-import RTLPage from "../views/RTLPage/RTLPage.js";
 //import routes from "routes.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
@@ -65,7 +60,6 @@ export default function Admin({ ...rest }) {
     {
       path: "/home",
       name: "Home",
-      rtlName: "millos",
       icon: Home,
       component: () => <HomePage executeModel={executeModel}/>,
       layout: "/admin"
@@ -73,7 +67,6 @@ export default function Admin({ ...rest }) {
     {
       path: "/dashboard",
       name: "Dashboard",
-      rtlName: "millos",
       icon: Dashboard,
       component: () => <ModelDashboardPage parameters={parameters}/>,
       layout: "/admin",
@@ -82,7 +75,6 @@ export default function Admin({ ...rest }) {
     {
       path: "/dashboard2",
       name: "Dashboard2",
-      rtlName: "لوحة القيادة",
       icon: Dashboard,
       component: DashboardPage,
       layout: "/admin"
@@ -90,7 +82,6 @@ export default function Admin({ ...rest }) {
     {
       path: "/user",
       name: "User Profile",
-      rtlName: "ملف تعريفي للمستخدم",
       icon: Person,
       component: UserProfile,
       layout: "/admin"
@@ -98,7 +89,6 @@ export default function Admin({ ...rest }) {
     {
       path: "/table",
       name: "Table List",
-      rtlName: "قائمة الجدول",
       icon: "content_paste",
       component: TableList,
       layout: "/admin"
@@ -106,7 +96,6 @@ export default function Admin({ ...rest }) {
     {
       path: "/typography",
       name: "Typography",
-      rtlName: "طباعة",
       icon: LibraryBooks,
       component: Typography,
       layout: "/admin"
@@ -114,7 +103,6 @@ export default function Admin({ ...rest }) {
     {
       path: "/icons",
       name: "Icons",
-      rtlName: "الرموز",
       icon: BubbleChart,
       component: Icons,
       layout: "/admin"
@@ -122,7 +110,6 @@ export default function Admin({ ...rest }) {
     {
       path: "/notifications",
       name: "Notifications",
-      rtlName: "إخطارات",
       icon: Notifications,
       component: NotificationsPage,
       layout: "/admin"

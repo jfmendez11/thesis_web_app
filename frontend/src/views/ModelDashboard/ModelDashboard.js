@@ -16,6 +16,7 @@ import Accessibility from "@material-ui/icons/Accessibility";
 import BugReport from "@material-ui/icons/BugReport";
 import Code from "@material-ui/icons/Code";
 import Cloud from "@material-ui/icons/Cloud";
+import Skeleton from '@material-ui/lab/Skeleton';
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -50,8 +51,11 @@ const useStyles = makeStyles(styles);
 
 export default function Dashboard(props) {
   const classes = useStyles();
+  const [loading, setLoading] = React.useState(false);
   React.useEffect(() => {
+    setLoading(true);
     executeLDAModel(props.parameters, (data) => {
+      setLoading(false);
       console.log(data);
     });
   }, [])
@@ -68,7 +72,7 @@ export default function Dashboard(props) {
           <Card>
             <CardHeader color="warning" stats icon>
               <CardIcon color="warning">
-                <Icon>content_copy</Icon>
+                {loading ? <Skeleton /> : <Icon>content_copy</Icon>}
               </CardIcon>
               <p className={classes.cardCategory}>Used Space</p>
               <h3 className={classes.cardTitle}>
@@ -170,14 +174,14 @@ export default function Dashboard(props) {
         <GridItem xs={12} sm={12} md={4}>
           <Card chart>
             <CardHeader color="warning">
-              <ChartistGraph
+              {loading ? <Skeleton /> : <ChartistGraph
                 className="ct-chart"
                 data={emailsSubscriptionChart.data}
                 type="Bar"
                 options={emailsSubscriptionChart.options}
                 responsiveOptions={emailsSubscriptionChart.responsiveOptions}
                 listener={emailsSubscriptionChart.animation}
-              />
+              />}
             </CardHeader>
             <CardBody>
               <h4 className={classes.cardTitle}>Email Subscriptions</h4>
