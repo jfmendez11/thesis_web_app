@@ -38,10 +38,7 @@ import {
   completedTasksChart
 } from "variables/charts.js";
 
-import {
-  getTweets,
-  getUsers,
-} from "../../API/TwitterAPI.js";
+import { getTweets, } from "../../API/TwitterAPI.js";
 
 import { executeLDAModel } from "../../API/LDAModelAPI.js"
 
@@ -49,22 +46,37 @@ import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js"
 
 const useStyles = makeStyles(styles);
 
+const processData = (tweets, results) => {
+  let processedData = {};
+  processedData.topics = results;
+  return processedData;
+}
+
 export default function Dashboard(props) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
+  const [tweets, setTweets] = React.useState([]);
+  const [results, setResults] = React.useState({});
   React.useEffect(() => {
     setLoading(true);
-    executeLDAModel(props.parameters, (data) => {
+    // getTweets((data, err) => {
+    //   if(!err) {
+    //     setTweets(data);
+    //     console.log(data);
+    //   } else {
+    //     console.log(err);
+    //   }
+    // });
+    executeLDAModel(props.parameters, (data, err) => {
       setLoading(false);
-      console.log(data);
+      if(!err && data.success) {
+        setResults(data.data);
+        console.log(data);
+      } else {
+        console.log(err);
+      }
     });
-  }, [])
-  // getUsers((data) => {
-  //   console.log(data);
-  // });
-  // executeLDAModel(({topics: 5}), (data) => {
-  //   console.log(data);
-  // });
+  }, []);
   return (
     <div>
       <GridContainer>

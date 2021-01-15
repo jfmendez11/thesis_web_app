@@ -34,10 +34,7 @@ import SnackbarContent from "components/Snackbar/SnackbarContent.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 import Button from "components/CustomButtons/Button.js";
 // API Methods
-import {
-  getTweets,
-  getUsers,
-} from "../../API/TwitterAPI.js";
+import { getUsers } from "../../API/TwitterAPI.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
@@ -179,7 +176,7 @@ const renderSelectedParameters = (parameters, classes) => {
   if(parameters.topics) topicsSection = 
     <GridItem xs={12} sm={12} md={12}>
       <h5>Número de tópicos</h5>
-      <SnackbarContent message={`Tópicos: ${parameters.topics}`} icon={InfoIcon}/>
+      <SnackbarContent message={`Tópicos: ${parameters.topics}`} icon={TopicsIcon}/>
     </GridItem>;
   
   let dateComponents = [];
