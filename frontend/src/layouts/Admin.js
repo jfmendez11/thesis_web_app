@@ -31,7 +31,6 @@ import NotificationsPage from "../views/Notifications/Notifications.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
-import bgImage from "assets/img/sidebar-2.jpg";
 import logo from "assets/img/reactlogo.png";
 
 let ps;
@@ -125,7 +124,9 @@ export default function Admin({ ...rest }) {
               path={prop.layout + prop.path}
               component={prop.component}
               key={key}
-            />
+            >
+              {isDashboardDisabled && prop.path === "/dashboard" ? <Redirect to="/home" /> : prop.component}
+            </Route>
           );
         }
         return null;
