@@ -1,105 +1,142 @@
 import React from "react";
-// react plugin for creating charts
-import ChartistGraph from "react-chartist";
+import moment from "moment";
+import { TagCloud } from 'react-tagcloud'
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
+// @material-ui/lab
+import Skeleton from '@material-ui/lab/Skeleton';
 // @material-ui/icons
-import Store from "@material-ui/icons/Store";
-import Warning from "@material-ui/icons/Warning";
 import DateRange from "@material-ui/icons/DateRange";
-import LocalOffer from "@material-ui/icons/LocalOffer";
-import Update from "@material-ui/icons/Update";
-import ArrowUpward from "@material-ui/icons/ArrowUpward";
 import AccessTime from "@material-ui/icons/AccessTime";
 import Accessibility from "@material-ui/icons/Accessibility";
-import BugReport from "@material-ui/icons/BugReport";
-import Code from "@material-ui/icons/Code";
-import Cloud from "@material-ui/icons/Cloud";
-import Skeleton from '@material-ui/lab/Skeleton';
+import Twitter from '@material-ui/icons/Twitter'
+import TopicsIcon from "@material-ui/icons/PermDataSetting";
+import Info from "@material-ui/icons/InfoOutlined";
+import Time from "@material-ui/icons/Schedule";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Tasks from "components/Tasks/Tasks.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-
-import { bugs, website, server } from "variables/general.js";
-
-import {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
-} from "variables/charts.js";
-
-import { getTweets, } from "../../API/TwitterAPI.js";
+import GeneralInfo from './Sections/GeneralInfo.js';
+import TopicInfo from './Sections/TopicInfo.js';
+import TimeAnalysis from './Sections/TimeAnalysis.js';
+import TweetAnalysis from './Sections/TweetAnalysis.js';
 
 import { executeLDAModel } from "../../API/LDAModelAPI.js"
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
-const useStyles = makeStyles(styles);
+const getWordCloudData = (modelInfo) => {
+  let topicsWordCloud = [];
+  for(let topic in modelInfo) {
+    topicsWordCloud.push(Object.keys(modelInfo[topic].words).map((word) => {
+      return {
+        value: word,
+        count: Math.round(modelInfo[topic].words[word].importance*1000),
+        color: modelInfo[topic].color,
+      };
+    }));
+  }
+  return topicsWordCloud;
+};
 
-const processData = (tweets, results) => {
-  let processedData = {};
-  processedData.topics = results;
-  return processedData;
-}
+const useStyles = makeStyles(styles);
 
 export default function Dashboard(props) {
   const classes = useStyles();
   const [loading, setLoading] = React.useState(false);
   const [tweets, setTweets] = React.useState([]);
-  const [results, setResults] = React.useState({});
+  const [modelInfo, setModelInfo] = React.useState({});
+  const [dates, setDates] = React.useState({});
+  const [colors, setColors] = React.useState({});
+  const [pageCount, setPageCount] = React.useState(0);
   React.useEffect(() => {
     setLoading(true);
-    // getTweets((data, err) => {
-    //   if(!err) {
-    //     setTweets(data);
-    //     console.log(data);
-    //   } else {
-    //     console.log(err);
-    //   }
-    // });
     executeLDAModel(props.parameters, (data, err) => {
       setLoading(false);
       if(!err && data.success) {
-        setResults(data.data);
         console.log(data);
+        setModelInfo(data.data.model_info);
+        setTweets(data.data.tweets);
+        setPageCount(Math.ceil(data.data.tweets.length/10));
+        getDates(data.data.tweets);
+        getColors(data.data.model_info);
+      } else if (!err) {
+        console.log(data.message);
       } else {
         console.log(err);
       }
     });
   }, []);
+  
+  const getDates = (tweets) => {
+    let datesObj = {};
+    for(let tweet of tweets) {
+      let date = moment(tweet.created_at.$date).startOf('day').format('DD MMM YYYY');
+      let dateObj = datesObj[date];
+      if(!dateObj) {
+        let informationObject = {};
+        informationObject["Tópico " + tweet.dominant_topic] = 1;
+        informationObject["Total"] = 1;
+        datesObj[date] = informationObject;
+      } else {
+        let topic = dateObj["Tópico " + tweet.dominant_topic];
+        if(topic) {
+          dateObj["Tópico " + tweet.dominant_topic] += 1;
+        } else {
+          dateObj["Tópico " + tweet.dominant_topic] = 1
+        }
+        dateObj["Total"] += 1;
+      }
+    }
+    setDates(datesObj);
+  };
+
+  const getColors = (modelInfo) => {
+    let colorsObj = {};
+    for(let topic in modelInfo) {
+      colorsObj["Tópico " + topic] = modelInfo[topic].color;
+    }
+    colorsObj["Ninguno"] = "#000";
+    setColors(colorsObj);
+  };
+
   return (
     <div>
       <GridContainer>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
-                {loading ? <Skeleton /> : <Icon>content_copy</Icon>}
+            <CardHeader color="info" stats icon>
+              <CardIcon color="info">
+                <Twitter />
               </CardIcon>
-              <p className={classes.cardCategory}>Used Space</p>
-              <h3 className={classes.cardTitle}>
-                49/50 <small>GB</small>
-              </h3>
+              {loading ? (
+                <GridContainer>
+                  <Skeleton style={styles.cardCategory} width="100%"/>
+                  <Skeleton style={styles.cardTitle} width="100%"/>
+                </GridContainer>
+              ) : (
+                <div>
+                  <p className={classes.cardCategory}>Twits Analizados</p>
+                  <h3 className={classes.cardTitle}>
+                    {tweets.length}
+                  </h3>
+                </div>
+              )}
             </CardHeader>
             <CardFooter stats>
-              <div className={classes.stats}>
-                <Danger>
-                  <Warning />
-                </Danger>
-                <a href="#pablo" onClick={e => e.preventDefault()}>
-                  Get more space
-                </a>
-              </div>
+              {loading ? (
+                <Skeleton style={styles.stats} width="100%"/>
+              ) : (
+                <div className={classes.stats}>
+                  {`Se analizaron ${tweets.length} twits al ejectar el modelo`}
+                </div>
+              )}
             </CardFooter>
           </Card>
         </GridItem>
@@ -107,16 +144,28 @@ export default function Dashboard(props) {
           <Card>
             <CardHeader color="success" stats icon>
               <CardIcon color="success">
-                <Store />
+                <TopicsIcon />
               </CardIcon>
-              <p className={classes.cardCategory}>Revenue</p>
-              <h3 className={classes.cardTitle}>$34,245</h3>
+              {loading ? (
+                <GridContainer>
+                  <Skeleton style={styles.cardCategory} width="100%"/>
+                  <Skeleton style={styles.cardTitle} width="100%"/>
+                </GridContainer>
+              ) : (
+                <div>
+                  <p className={classes.cardCategory}>Tópicos</p>
+                  <h3 className={classes.cardTitle}>{props.parameters.topics}</h3>
+                </div>
+              )}
             </CardHeader>
             <CardFooter stats>
-              <div className={classes.stats}>
-                <DateRange />
-                Last 24 Hours
-              </div>
+            {loading ? (
+                <Skeleton style={styles.stats} width="100%"/>
+              ) : (
+                <div className={classes.stats}>
+                  {`Se agruparon los twits en ${props.parameters.topics} tópicos`}
+                </div>
+              )}
             </CardFooter>
           </Card>
         </GridItem>
@@ -124,102 +173,77 @@ export default function Dashboard(props) {
           <Card>
             <CardHeader color="danger" stats icon>
               <CardIcon color="danger">
-                <Icon>info_outline</Icon>
+                <DateRange />
               </CardIcon>
-              <p className={classes.cardCategory}>Fixed Issues</p>
-              <h3 className={classes.cardTitle}>75</h3>
+              {loading ? (
+                <GridContainer>
+                  <Skeleton style={styles.cardCategory} width="100%"/>
+                  <Skeleton style={styles.cardTitle} width="100%"/>
+                </GridContainer>
+              ) : (
+                <div>
+                  <p className={classes.cardCategory}>Fechas</p>
+                  <h5 className={classes.cardTitle}>{props.parameters.start}</h5>-<h5 className={classes.cardTitle}>{props.parameters.end}</h5>
+                </div>
+              )}
             </CardHeader>
             <CardFooter stats>
-              <div className={classes.stats}>
-                <LocalOffer />
-                Tracked from Github
-              </div>
+            {loading ? (
+                <Skeleton style={styles.stats} width="100%"/>
+              ) : (
+                <div className={classes.stats}>
+                  {`Se analizaron twits de ${props.parameters.start} a ${props.parameters.end}`}
+                </div>
+              )}
             </CardFooter>
           </Card>
         </GridItem>
         <GridItem xs={12} sm={6} md={3}>
           <Card>
-            <CardHeader color="info" stats icon>
-              <CardIcon color="info">
+            <CardHeader color="warning" stats icon>
+              <CardIcon color="warning">
                 <Accessibility />
               </CardIcon>
-              <p className={classes.cardCategory}>Followers</p>
-              <h3 className={classes.cardTitle}>+245</h3>
+              {loading ? (
+                <GridContainer>
+                  <Skeleton style={styles.cardCategory} width="100%"/>
+                  <Skeleton style={styles.cardTitle} width="100%"/>
+                </GridContainer>
+              ) : (
+                <div>
+                  <p className={classes.cardCategory}>Cuentas</p>
+                  <h3 className={classes.cardTitle}>{6}</h3>
+                </div>
+              )}
             </CardHeader>
             <CardFooter stats>
-              <div className={classes.stats}>
-                <Update />
-                Just Updated
-              </div>
+            {loading ? (
+                <Skeleton style={styles.stats} width="100%"/>
+              ) : (
+                <div className={classes.stats}>
+                  {`Se analizaron los twits de ${25} cuentas`}
+                </div>
+              )}
             </CardFooter>
           </Card>
         </GridItem>
       </GridContainer>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={4}>
+        <GridItem xs={12} sm={12} md={12}>
           <Card chart>
-            <CardHeader color="success">
-              <ChartistGraph
-                className="ct-chart"
-                data={dailySalesChart.data}
-                type="Line"
-                options={dailySalesChart.options}
-                listener={dailySalesChart.animation}
-              />
+            <CardHeader color="info">
             </CardHeader>
             <CardBody>
-              <h4 className={classes.cardTitle}>Daily Sales</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  <ArrowUpward className={classes.upArrowCardCategory} /> 55%
-                </span>{" "}
-                increase in today sales.
-              </p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> updated 4 minutes ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="warning">
-              {loading ? <Skeleton /> : <ChartistGraph
-                className="ct-chart"
-                data={emailsSubscriptionChart.data}
-                type="Bar"
-                options={emailsSubscriptionChart.options}
-                responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                listener={emailsSubscriptionChart.animation}
-              />}
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Email Subscriptions</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={4}>
-          <Card chart>
-            <CardHeader color="danger">
-              <ChartistGraph
-                className="ct-chart"
-                data={completedTasksChart.data}
-                type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Completed Tasks</h4>
-              <p className={classes.cardCategory}>Last Campaign Performance</p>
+            {loading ? <Skeleton /> : getWordCloudData(modelInfo).map(((data, i) => (
+                <GridItem key={`topic-wordcloud-${i}`} md={12}>
+                  <TagCloud
+                    minSize={12}
+                    maxSize={35}
+                    tags={data}
+                    onClick={tag => alert(`'${tag.value}' was selected!`)}
+                  />
+                </GridItem>
+              )))}
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
@@ -230,68 +254,54 @@ export default function Dashboard(props) {
         </GridItem>
       </GridContainer>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={6}>
+        <GridItem xs={12} sm={12} md={12}>
           <CustomTabs
-            title="Tasks:"
+            title="Resultados:"
             headerColor="primary"
             tabs={[
               {
-                tabName: "Bugs",
-                tabIcon: BugReport,
+                tabName: "Información General",
+                tabIcon: Info,
                 tabContent: (
-                  <Tasks
-                    checkedIndexes={[0, 3]}
-                    tasksIndexes={[0, 1, 2, 3]}
-                    tasks={bugs}
+                  <GeneralInfo
+                    tweets={tweets}
                   />
                 )
               },
               {
-                tabName: "Website",
-                tabIcon: Code,
+                tabName: "Tópicos",
+                tabIcon: TopicsIcon,
                 tabContent: (
-                  <Tasks
-                    checkedIndexes={[0]}
-                    tasksIndexes={[0, 1]}
-                    tasks={website}
+                  <TopicInfo
+                    modelInfo={modelInfo}
                   />
                 )
               },
               {
-                tabName: "Server",
-                tabIcon: Cloud,
+                tabName: "Análisis Temporal",
+                tabIcon: Time,
                 tabContent: (
-                  <Tasks
-                    checkedIndexes={[1]}
-                    tasksIndexes={[0, 1, 2]}
-                    tasks={server}
+                  <TimeAnalysis
+                    tweets={tweets}
+                    dates={dates}
+                    topics={props.parameters.topics}
+                  />
+                )
+              },
+              {
+                tabName: "Tweets",
+                tabIcon: Twitter,
+                tabContent: (
+                  <TweetAnalysis
+                    tweets={tweets}
+                    modelInfo={modelInfo}
+                    colors={colors}
+                    pageCount={pageCount}
                   />
                 )
               }
             ]}
           />
-        </GridItem>
-        <GridItem xs={12} sm={12} md={6}>
-          <Card>
-            <CardHeader color="warning">
-              <h4 className={classes.cardTitleWhite}>Employees Stats</h4>
-              <p className={classes.cardCategoryWhite}>
-                New employees on 15th September, 2016
-              </p>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="warning"
-                tableHead={["ID", "Name", "Salary", "Country"]}
-                tableData={[
-                  ["1", "Dakota Rice", "$36,738", "Niger"],
-                  ["2", "Minerva Hooper", "$23,789", "Curaçao"],
-                  ["3", "Sage Rodriguez", "$56,142", "Netherlands"],
-                  ["4", "Philip Chaney", "$38,735", "Korea, South"]
-                ]}
-              />
-            </CardBody>
-          </Card>
         </GridItem>
       </GridContainer>
     </div>
