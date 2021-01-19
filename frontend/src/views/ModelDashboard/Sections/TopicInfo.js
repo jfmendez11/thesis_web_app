@@ -14,6 +14,7 @@ import CardFooter from "components/Card/CardFooter.js";
 import BarGraph from "components/Charts/BarChart.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import useDimensions from "react-cool-dimensions";
 
 const getTopicWordCountAndImportance = (modelInfo) => {
   let topicsArray = [];
@@ -51,72 +52,70 @@ const useStyles = makeStyles(styles);
 
 export default function TopicInfo(props) {
   const classes = useStyles();
-  const [loading, setLoading] = React.useState(false);
+  const { ref, width, height, } = useDimensions();
   let countDataKeys = ["Número de documentos","Número de documentos total"]
   return (
     <div>
       <GridContainer>
-        {loading ? (
-          <Skeleton />
-        ) : (
-          getTopicWordCountAndImportance(props.modelInfo).map((data, i) => (
-            <GridItem key={`topicinfo-graph1-${i}`} xs={12} sm={12} md={6}>
-              <Card chart>
-                <CardHeader color="danger">
-                    <GridItem md={12}>
-                      <BarGraph
-                        shared 
-                        data={data} 
-                        xAxisDataKey="Palabras del tópico" 
-                        dataKey="Cantidad de palabras por tópico dominante;Peso de la palabra en el tópico"
-                        angle={-30}
-                      />
-                    </GridItem>
-                </CardHeader>
-                <CardBody>
-                  <h4 className={classes.cardTitle}>Completed Tasks</h4>
-                  <p className={classes.cardCategory}>Last Campaign Performance</p>
-                </CardBody>
-                <CardFooter chart>
-                  <div className={classes.stats}>
-                    campaign sent 2 days ago
-                  </div>
-                </CardFooter>
-              </Card>
-            </GridItem>
-          ))
-        )}
+        {(props.loading ? Array.from(new Array(Number(props.topics))) : getTopicWordCountAndImportance(props.modelInfo)).map((data, i) => (
+          <GridItem key={`topicinfo-graph1-${i}`} xs={12} sm={12} md={6}>
+            <Card chart>
+              <CardHeader color="danger">
+                <h3 className={classes.cardTitle}>{`Importancia y cuenta del Tópico ${i}`}</h3>
+              </CardHeader>
+              <div ref={ref}>
+              <CardBody>
+                {data ? (
+                  <BarGraph
+                    shared
+                    width={width} 
+                    data={data} 
+                    xAxisDataKey="Palabras del tópico" 
+                    dataKey="Cantidad de palabras por tópico dominante;Peso de la palabra en el tópico"
+                    angle={-30}
+                  />
+                ) : (
+                  <Skeleton width="100%" height={300} />
+                )}
+              </CardBody>
+              </div>
+              <CardFooter chart>
+                <div className={classes.stats}>
+                  campaign sent 2 days ago
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+        ))}
         </GridContainer>
         <GridContainer>
-        {loading ? (
-          <Skeleton />
-        ) : (
-          getTopicDocumentCount(props.modelInfo).map((data, i) => (
-            <GridItem key={`topicinfo-graph2-${i}`} xs={12} sm={12} md={6}>
-              <Card chart>
-                <CardHeader color="info">
-                    <GridItem>
-                      <BarGraph
-                        data={data} 
-                        xAxisDataKey="Tópico" 
-                        dataKey={countDataKeys[i]}
-                        angle={-30}
-                      />
-                    </GridItem>
-                </CardHeader>
-                <CardBody>
-                  <h4 className={classes.cardTitle}>Completed Tasks</h4>
-                  <p className={classes.cardCategory}>Last Campaign Performance</p>
-                </CardBody>
-                <CardFooter chart>
-                  <div className={classes.stats}>
-                    campaign sent 2 days ago
-                  </div>
-                </CardFooter>
-              </Card>
-            </GridItem>
-          ))
-        )}
+        {(props.loading ? Array.from(new Array(Number(2))) : getTopicDocumentCount(props.modelInfo)).map((data, i) => (
+          <GridItem key={`topicinfo-graph2-${i}`} xs={12} sm={12} md={6}>
+            <Card chart>
+              <CardHeader color="info">
+                <h3 className={classes.cardTitle}>{`Cuenta por Tópico Dominante`}</h3>
+              </CardHeader>
+              <CardBody>
+                {data ? (
+                  <BarGraph
+                    width={width}
+                    data={data} 
+                    xAxisDataKey="Tópico" 
+                    dataKey={countDataKeys[i]}
+                    angle={-30}
+                  />
+                ) : (
+                  <Skeleton width="100%" height={300} />
+                )}
+              </CardBody>
+              <CardFooter chart>
+                <div className={classes.stats}>
+                  campaign sent 2 days ago
+                </div>
+              </CardFooter>
+            </Card>
+          </GridItem>
+        ))}
       </GridContainer>
     </div>
   );

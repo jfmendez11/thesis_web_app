@@ -11,7 +11,7 @@ export default class ComposedGraph extends PureComponent {
   render() {
     return (
       <ComposedChart
-        width={500}
+        width={this.props.width ? this.props.width*0.9 : 300}
         height={400}
         data={this.props.data}
         margin={{

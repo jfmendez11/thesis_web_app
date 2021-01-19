@@ -13,6 +13,9 @@ import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import BarGraph from "components/Charts/BarChart.js";
 import ComposedGraph from "components/Charts/ComposedChart.js";
+import CountByTopic from "./CountByTopic.js";
+
+import useDimensions from "react-cool-dimensions";
 
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
@@ -68,24 +71,28 @@ const getDocumentWordCountByTopics = (tweets) => {
 
 export default function GeneralInfo(props) {
   const classes = useStyles();
-  const [loading, setLoading] = React.useState(false);
+  const { ref, width, height, } = useDimensions();
   return (
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card chart>
             <CardHeader color="success">
-              <BarGraph data={getDistributionOfDocs(props.tweets)} xAxisDataKey="Palabras por documento" dataKey="Cantidad de documentos"/>
             </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Daily Sales</h4>
-              <p className={classes.cardCategory}>
-                <span className={classes.successText}>
-                  55%
-                </span>{" "}
-                increase in today sales.
-              </p>
-            </CardBody>
+            <div ref={ref}>
+              <CardBody>
+                {props.loading ? (
+                  <Skeleton width="100%" height={300}/>
+                ) : (
+                  <BarGraph 
+                    width={width} 
+                    data={getDistributionOfDocs(props.tweets)} 
+                    xAxisDataKey="Palabras por documento"
+                    dataKey="Cantidad de documentos"
+                  />
+                )}
+              </CardBody>
+            </div>
             <CardFooter chart>
               <div className={classes.stats}>
                 updated 4 minutes ago
@@ -93,35 +100,12 @@ export default function GeneralInfo(props) {
             </CardFooter>
           </Card>
         </GridItem>
-        {loading ? (
-          <Skeleton />
-        ) : (
-          getDocumentWordCountByTopics(props.tweets).map((data, i) =>(
-            (
-              <GridItem key={`generalinfo-graph1-${i}`} xs={12} sm={12} md={6}>
-                <Card chart>
-                  <CardHeader color="warning">
-                    <GridContainer>
-                      <GridItem md={12}>
-                        <ComposedGraph data={data} xAxisDataKey="Palabras por documento" dataKey="Cantidad de documentos"/>
-                      </GridItem>
-                    </GridContainer>
-                  </CardHeader>
-                  <CardBody>
-                    <h4 className={classes.cardTitle}>Email Subscriptions</h4>
-                    <p className={classes.cardCategory}>Last Campaign Performance</p>
-                  </CardBody>
-                  <CardFooter chart>
-                    <div className={classes.stats}>
-                      campaign sent 2 days ago
-                    </div>
-                  </CardFooter>
-                </Card>
-              </GridItem>
-            )
-          ))
-        )}
       </GridContainer>
+      <CountByTopic
+        topics={props.topics}
+        tweets={props.tweets}
+        loading={props.loading}
+      />
     </div>
   );
 }

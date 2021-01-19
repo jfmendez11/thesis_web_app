@@ -13,6 +13,7 @@ import Twitter from '@material-ui/icons/Twitter'
 import TopicsIcon from "@material-ui/icons/PermDataSetting";
 import Info from "@material-ui/icons/InfoOutlined";
 import Time from "@material-ui/icons/Schedule";
+import Spellcheck from "@material-ui/icons/Spellcheck";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -22,43 +23,28 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import GeneralInfo from './Sections/GeneralInfo.js';
+import GeneralInfo from './Sections/GeneralInfo/GeneralInfo.js';
 import TopicInfo from './Sections/TopicInfo.js';
-import TimeAnalysis from './Sections/TimeAnalysis.js';
+import TimeAnalysis from './Sections/TimeAnalysis/TimeAnalysis.js';
 import TweetAnalysis from './Sections/TweetAnalysis.js';
+import TopicWords from './Sections/TopicWords.js';
 
 import { executeLDAModel } from "../../API/LDAModelAPI.js"
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
-const getWordCloudData = (modelInfo) => {
-  let topicsWordCloud = [];
-  for(let topic in modelInfo) {
-    topicsWordCloud.push(Object.keys(modelInfo[topic].words).map((word) => {
-      return {
-        value: word,
-        count: Math.round(modelInfo[topic].words[word].importance*1000),
-        color: modelInfo[topic].color,
-      };
-    }));
-  }
-  return topicsWordCloud;
-};
-
 const useStyles = makeStyles(styles);
 
 export default function Dashboard(props) {
   const classes = useStyles();
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const [tweets, setTweets] = React.useState([]);
   const [modelInfo, setModelInfo] = React.useState({});
   const [dates, setDates] = React.useState({});
   const [colors, setColors] = React.useState({});
   const [pageCount, setPageCount] = React.useState(0);
   React.useEffect(() => {
-    setLoading(true);
     executeLDAModel(props.parameters, (data, err) => {
-      setLoading(false);
       if(!err && data.success) {
         console.log(data);
         setModelInfo(data.data.model_info);
@@ -71,6 +57,7 @@ export default function Dashboard(props) {
       } else {
         console.log(err);
       }
+      setLoading(false);
     });
   }, []);
   
@@ -230,24 +217,25 @@ export default function Dashboard(props) {
       </GridContainer>
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
-          <Card chart>
-            <CardHeader color="info">
+          <Card>
+            <CardHeader color="info" icon stats>
+              <CardIcon color="info">
+                <Spellcheck />
+              </CardIcon>
+              <h3 className={classes.cardTitle}>
+                Palabras más relevantes de cada tópico
+              </h3>
             </CardHeader>
             <CardBody>
-            {loading ? <Skeleton /> : getWordCloudData(modelInfo).map(((data, i) => (
-                <GridItem key={`topic-wordcloud-${i}`} md={12}>
-                  <TagCloud
-                    minSize={12}
-                    maxSize={35}
-                    tags={data}
-                    onClick={tag => alert(`'${tag.value}' was selected!`)}
-                  />
-                </GridItem>
-              )))}
+              <TopicWords 
+                loading={loading} 
+                modelInfo={modelInfo} 
+                topics={props.parameters.topics}
+              />
             </CardBody>
             <CardFooter chart>
               <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
+                <Info /> El tamaño de la palabra depende de su importancia en el tópico
               </div>
             </CardFooter>
           </Card>
@@ -264,6 +252,8 @@ export default function Dashboard(props) {
                 tabIcon: Info,
                 tabContent: (
                   <GeneralInfo
+                    topics={props.parameters.topics}
+                    loading={loading}
                     tweets={tweets}
                   />
                 )
@@ -273,6 +263,8 @@ export default function Dashboard(props) {
                 tabIcon: TopicsIcon,
                 tabContent: (
                   <TopicInfo
+                    topics={props.parameters.topics}
+                    loading={loading}
                     modelInfo={modelInfo}
                   />
                 )
@@ -284,6 +276,7 @@ export default function Dashboard(props) {
                   <TimeAnalysis
                     tweets={tweets}
                     dates={dates}
+                    loading={loading}
                     topics={props.parameters.topics}
                   />
                 )
@@ -293,6 +286,7 @@ export default function Dashboard(props) {
                 tabIcon: Twitter,
                 tabContent: (
                   <TweetAnalysis
+                    loading={loading}
                     tweets={tweets}
                     modelInfo={modelInfo}
                     colors={colors}

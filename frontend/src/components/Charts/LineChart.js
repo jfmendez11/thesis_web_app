@@ -15,7 +15,7 @@ export default class LineGraph extends PureComponent {
     }
     return (
       <LineChart
-        width={500}
+        width={this.props.width ? this.props.width*0.9 : 300}
         height={300}
         data={this.props.data}
         margin={{
@@ -28,7 +28,7 @@ export default class LineGraph extends PureComponent {
         <Tooltip />
         <Legend />
         {keys.map(topic => (
-           <Line type="monotone" dataKey={"Tópico " + topic} stroke={topic%2 === 0 ? "#8884d8" : "#82ca9d"} />
+           <Line key={"millosdavid@" + topic} connectNulls type="monotone" dataKey={"Tópico " + topic} stroke={topic%2 === 0 ? "#8884d8" : "#82ca9d"} />
         ))
         }
       </LineChart>

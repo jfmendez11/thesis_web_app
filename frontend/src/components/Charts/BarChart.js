@@ -7,6 +7,8 @@ import {
   hexToRgb
 } from "assets/jss/material-dashboard-react.js";
 
+import CustomTooltip from "./CustomTooltip.js";
+
 export default class BarGraph extends PureComponent {
   constructor(props) {
     super(props);
@@ -21,7 +23,7 @@ export default class BarGraph extends PureComponent {
     }
     return (
       <BarChart
-        width={500}
+        width={this.props.width ? this.props.width*0.95 : 300}
         height={300}
         data={this.props.data}
         margin={{
@@ -43,10 +45,10 @@ export default class BarGraph extends PureComponent {
             </YAxis>
           ) : ("")
         } 
-        <Tooltip />
+        <Tooltip content={<CustomTooltip />}/>
         {
           !this.props.stack ? dataKeys.map((key, i) => (
-            <Bar key={key} yAxisId={this.props.shared ? i : 0} dataKey={key} fill={i == 0 ? "#8884d8" : rgba} />
+            <Bar key={key} yAxisId={this.props.shared ? i : 0} dataKey={key} fill={i == 0 ? "#f5f5f5" : rgba} />
           )) : keys.map((key, i) => (
             <Bar key={key} stackId={"a"} dataKey={"Tópico " + key} fill={i%2 === 0 ? "#8884d8" : "#82ca9d"} />
           ))

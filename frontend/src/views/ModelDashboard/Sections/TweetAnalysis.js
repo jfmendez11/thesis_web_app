@@ -40,7 +40,6 @@ const useStyles = makeStyles(styles);
 
 export default function TweetAnalysis(props) {
   const classes = useStyles();
-  const [loading, setLoading] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState(0);
   const handlePageChange = (event, value) => {
     setCurrentPage(value - 1);
@@ -53,11 +52,11 @@ export default function TweetAnalysis(props) {
             <CardHeader color="info">
             </CardHeader>
             <CardBody>
-            {loading ? <Skeleton /> : props.tweets.slice(currentPage*10,(currentPage+1)*10).map(((tweet, i) => (
+            {props.loading ? <Skeleton /> : props.tweets.slice(currentPage*10,(currentPage+1)*10).map(((tweet, i) => (
               <GridContainer key={tweet.tweet_id}>
                   <GridItem md={4}>
                     {Object.keys(tweet.text_topic).map(text => {
-                      return (<span style={{color: props.modelInfo[tweet.text_topic[text]].color}}>{text + " "}</span>);
+                      return (<span key={tweet._id.$oid + text + i} style={{color: props.modelInfo[tweet.text_topic[text]].color}}>{text + " "}</span>);
                     })}
                   </GridItem>
                   <GridItem md={4}>
