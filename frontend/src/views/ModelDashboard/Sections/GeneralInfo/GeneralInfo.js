@@ -1,6 +1,8 @@
 import React from "react";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
+// @material-ui/icons
+import Stats from "@material-ui/icons/InsertChart"
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 // core components
@@ -17,7 +19,7 @@ import CountByTopic from "./CountByTopic.js";
 
 import useDimensions from "react-cool-dimensions";
 
-
+import arr from "stats.js"
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
 const useStyles = makeStyles(styles);
@@ -76,8 +78,14 @@ export default function GeneralInfo(props) {
     <div>
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
-          <Card chart>
-            <CardHeader color="success">
+          <Card>
+            <CardHeader stats icon color="success">
+              <CardIcon color="success">
+                <Stats />
+              </CardIcon>
+              <h3 className={classes.cardTitle}>
+                Información de los Twits
+              </h3>
             </CardHeader>
             <div ref={ref}>
               <CardBody>
@@ -95,7 +103,7 @@ export default function GeneralInfo(props) {
             </div>
             <CardFooter chart>
               <div className={classes.stats}>
-                updated 4 minutes ago
+                media = {arr.mean(getDistributionOfDocs(props.tweets).map(a => a["Palabras por documento"]*a["Cantidad de documentos"]))}
               </div>
             </CardFooter>
           </Card>

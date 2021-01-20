@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
+import moment from "moment";
 // creates a beautiful scrollbar
 import PerfectScrollbar from "perfect-scrollbar";
 import "perfect-scrollbar/css/perfect-scrollbar.css";
@@ -51,6 +52,12 @@ export default function Admin({ ...rest }) {
   const executeModel = (modelParameters) => {
     console.log(modelParameters);
     setIsDashboardDisabled(false);
+    if(modelParameters.start) {
+      modelParameters.start = moment(modelParameters.start).format("YYYY-MM-DD")  + " 00:00:00.0";
+    }
+    if(modelParameters.end) {
+      modelParameters.end = moment(modelParameters.end).format("YYYY-MM-DD") + " 23:59:59.9";
+    }
     modelParameters.accounts = Object.keys(modelParameters.accounts).join(" ");
     setParameters(modelParameters);
   }

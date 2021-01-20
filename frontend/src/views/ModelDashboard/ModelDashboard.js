@@ -170,7 +170,8 @@ export default function Dashboard(props) {
               ) : (
                 <div>
                   <p className={classes.cardCategory}>Fechas</p>
-                  <h5 className={classes.cardTitle}>{props.parameters.start}</h5>-<h5 className={classes.cardTitle}>{props.parameters.end}</h5>
+                  <h5 className={classes.cardTitle}>{props.parameters.start ? moment(props.parameters.start).startOf("day").format('DD MMM YYYY') : "03 Mar 2020"}</h5>
+                  <h5 className={classes.cardTitle}>{props.parameters.end ? moment(props.parameters.end).startOf("day").format('DD MMM YYYY') : moment().startOf('day').format('DD MMM YYYY')}</h5>
                 </div>
               )}
             </CardHeader>
@@ -179,7 +180,7 @@ export default function Dashboard(props) {
                 <Skeleton style={styles.stats} width="100%"/>
               ) : (
                 <div className={classes.stats}>
-                  {`Se analizaron twits de ${props.parameters.start} a ${props.parameters.end}`}
+                  {`Se analizaron twits de ${props.parameters.start ? moment(props.parameters.start).startOf("day").format('DD MMM YYYY') : "03 Mar 2020"} a ${props.parameters.end ? moment(props.parameters.end).startOf("day").format('DD MMM YYYY') : moment().startOf('day').format('DD MMM YYYY')}`}
                 </div>
               )}
             </CardFooter>
@@ -199,7 +200,7 @@ export default function Dashboard(props) {
               ) : (
                 <div>
                   <p className={classes.cardCategory}>Cuentas</p>
-                  <h3 className={classes.cardTitle}>{6}</h3>
+                  <h3 className={classes.cardTitle}>{props.parameters.accounts.split(" ").length}</h3>
                 </div>
               )}
             </CardHeader>
@@ -208,7 +209,7 @@ export default function Dashboard(props) {
                 <Skeleton style={styles.stats} width="100%"/>
               ) : (
                 <div className={classes.stats}>
-                  {`Se analizaron los twits de ${25} cuentas`}
+                  {`Se analizaron los twits de ${props.parameters.accounts.split(" ").length} cuentas`}
                 </div>
               )}
             </CardFooter>

@@ -1,8 +1,11 @@
 import React from "react";
+import moment from "moment";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
 import Checkbox from "@material-ui/core/Checkbox";
+import Chip from '@material-ui/core/Chip';
+import Radio from '@material-ui/core/Radio';
 // @material-ui/pickers
 import MomentUtils from '@date-io/moment';
 import {
@@ -19,6 +22,7 @@ import TopicsIcon from "@material-ui/icons/PermDataSetting";
 import CalendarIcon from "@material-ui/icons/DateRange";
 import ProfileIcon from "@material-ui/icons/SupervisedUserCircle";
 import Check from "@material-ui/icons/Check";
+import At from "@material-ui/icons/AlternateEmailSharp";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -73,7 +77,7 @@ const renderInformationCard = (classes) => {
       </CardBody>
     </Card>
   );
-}
+};
 
 const renderParameterSelector = (users, accounts, handleToggle, onChange, classes) => {
   return (
@@ -126,7 +130,7 @@ const renderParameterSelector = (users, accounts, handleToggle, onChange, classe
         />
       </GridItem>
   );
-}
+};
 
 const renderDatePickers = (handleDateChange) => {
   return (
@@ -169,33 +173,50 @@ const renderDatePickers = (handleDateChange) => {
       </GridContainer>
     </MuiPickersUtilsProvider>
   );
-}
+};
 
-const renderSelectedParameters = (parameters, classes) => {
+const renderSelectedParameters = (parameters, classes, handleDelete, handleChange) => {
   let topicsSection = <div></div>;
   if(parameters.topics) topicsSection = 
     <GridItem xs={12} sm={12} md={12}>
       <h5>Número de tópicos</h5>
-      <SnackbarContent message={`Tópicos: ${parameters.topics}`} icon={TopicsIcon}/>
+      <SnackbarContent 
+        message={(<Chip label={`Tópicos: ${parameters.topics}`} color="secondary" onDelete={() => handleDelete("topics", null)}/>)} 
+        icon={TopicsIcon}
+      />
     </GridItem>;
   
   let dateComponents = [];
+  let dateKeys = [];
   let dateSection = null;
-  if(parameters.start) dateComponents.push(`Filtro fecha inicial: ${parameters.start}`);
-  if(parameters.end) dateComponents.push(`Filtro fecha final: ${parameters.end}`);
+  if(parameters.start) {
+    dateComponents.push(`Filtro fecha inicial: ${parameters.start}`);
+    dateKeys.push("start");
+  }
+  if(parameters.end) {
+    dateComponents.push(`Filtro fecha final: ${parameters.end}`);
+    dateKeys.push("end");
+  }
   if(dateComponents.length) {
-    dateSection = <ul>{dateComponents.map((message) => (<li key={message}>{message}</li>))}</ul>
+    dateSection = <ul>{dateComponents.map((message, i) => (<Chip key={message} color="secondary" label={message} onDelete={() => handleDelete(dateKeys[i], null)} />))}</ul>
   }
 
   let accountsSection = null;
   if(parameters.accounts) accountsSection = Object.keys(parameters.accounts).map(
     (account) => (parameters.accounts[account] ? 
-      <SnackbarContent
-        key={account}
-        message={account}
-        color="info"
-        close
-      /> : <div key={account}></div>))
+      (
+        <GridItem key={account} xs={12} sm={6} md={3}>
+          <Chip
+            icon={<At />}
+            color="secondary"
+            label={account}
+            onDelete={() => handleDelete("accounts", account)}
+          />
+        </GridItem>
+      ) : (
+      <div key={account}></div>
+      )
+    ))
 
   return (
     <GridItem xs={12} sm={12} md={6}>
@@ -207,24 +228,41 @@ const renderSelectedParameters = (parameters, classes) => {
           </p>
         </CardHeader>
         <CardBody>
-          <GridContainer>
             {topicsSection}
             {dateSection ? 
               <GridItem xs={12} sm={12} md={12}>
                 <h5>Filtro de fechas</h5>
-                <SnackbarContent message={dateSection} icon={InfoIcon}/>
+                <SnackbarContent message={dateSection} icon={CalendarIcon}/>
               </GridItem> : ""}
-            {accountsSection ? 
-              <GridItem xs={12} sm={8} md={4}>
-                <h5>Cuentas a analizar</h5>
-                  {accountsSection}
-              </GridItem> : ""}
-          </GridContainer>
+
+            {accountsSection ?
+            <div>
+              <h5>Ceuntas Seleccionadas</h5>
+              <GridContainer>
+                {accountsSection}
+              </GridContainer> 
+            </div>: ""}
+            <GridItem xs={12} sm={12} md={12}>
+              <h5>Selecciona los datos del modelo</h5>
+             <Radio
+              checked={!parameters["hashtagmodel"] || parameters["hashtagmodel"] === "0"}
+              onChange={handleChange}
+              value="0"
+              name="hashtagmodel"
+            /> Modelo sobre los Twits
+            <br />
+            <Radio
+              checked={parameters['hashtagmodel'] === "1"}
+              onChange={handleChange}
+              value="1"
+              name="hashtagmodel"
+            /> Modelo sobre los hashtags (#)
+            </GridItem>
         </CardBody>
       </Card>
     </GridItem>
   );
-}
+};
 
 const createUserGrid = (user, accounts, handleToggle, classes) => {
   return (
@@ -244,8 +282,7 @@ const createUserGrid = (user, accounts, handleToggle, classes) => {
           </p>
         </CardBody>
         <CardFooter profile>
-          <div className={classes.stats}>
-            <Danger>
+          <div >
               <Checkbox
                 checked={accounts[user.screen_name]}
                 tabIndex={-1}
@@ -257,14 +294,22 @@ const createUserGrid = (user, accounts, handleToggle, classes) => {
                   root: classes.root
                 }}
               />
-            </Danger>
-            Seleccionado para el modelo
+            Seleccionado
           </div>
         </CardFooter>
       </Card>
     </GridItem>
   );
-}
+};
+
+const validParameters = (parameters) => {
+  console.log(parameters);
+  let topicsNumber = Number(parameters.topics);
+  if(!topicsNumber || topicsNumber < 1) return false;
+  if(parameters.hashtagmodel && !(parameters.hashtagmodel === "1" || parameters.hashtagmodel === "0")) return false;
+  if(Object.keys(parameters.accounts).filter(account => parameters.accounts[account]).length === 0) return false;
+  return true;
+};
 
 export default function Home(props) {
   const classes = useStyles();
@@ -294,6 +339,22 @@ export default function Home(props) {
     });
   };
 
+  const handleDelete = (parameter, account) => {
+    if(account) {
+      let accounts = parameters["accounts"];
+        accounts[account] = false
+        setParameters({
+          ...parameters,
+          ["accounts"]: accounts,
+        });
+    } else {
+      setParameters({
+        ...parameters,
+        [parameter]: null,
+      });
+    }        
+  };
+
   React.useEffect(() => {
     getUsers((data, err) => {
       if(!err) {
@@ -311,9 +372,10 @@ export default function Home(props) {
       {renderInformationCard(classes)}
       <GridContainer>
         {renderParameterSelector(users, parameters.accounts, handleToggle, handleParameterChange, classes)}
-        {renderSelectedParameters(parameters, classes)}
+        {renderSelectedParameters(parameters, classes, handleDelete, handleParameterChange)}
       </GridContainer>
-      {parameters.topics ? <div className="fixed-plugin">
+      {validParameters(parameters) ? (
+      <div className="fixed-plugin">
         <Link to="/admin/dashboard">
           <Button
             round
@@ -323,12 +385,10 @@ export default function Home(props) {
             Ejecutar Modelo
           </Button>
         </Link>
-      </div> : <div></div>}
-      {/*<GridContainer>
-        {users.map((user) => (
-          createUserGrid(user, classes)
-        ))}
-        </GridContainer>*/}
+      </div>
+      ) : (
+      <div></div>
+      )}
     </div>
   );
 }

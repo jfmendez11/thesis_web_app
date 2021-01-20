@@ -5,8 +5,11 @@ import {
   grayColor,
   hexToRgb
 } from "assets/jss/material-dashboard-react.js";
-
+import tooltipStyle from "assets/jss/material-dashboard-react/tooltipStyle.js";
+import checkboxAdnRadioStyle from "assets/jss/material-dashboard-react/checkboxAdnRadioStyle.js";
 const dashboardStyle = {
+  ...tooltipStyle,
+  ...checkboxAdnRadioStyle,
   successText: {
     color: successColor[0]
   },
