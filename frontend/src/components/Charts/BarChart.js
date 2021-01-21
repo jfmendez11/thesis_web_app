@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Label, Brush
 } from 'recharts';
 
 import {
@@ -9,6 +9,10 @@ import {
 
 import CustomTooltip from "./CustomTooltip.js";
 
+const rgba = (hex) => {
+  return "rgba(" + hexToRgb(hex) + ",.62)" ;
+};
+
 export default class BarGraph extends PureComponent {
   constructor(props) {
     super(props);
@@ -16,7 +20,6 @@ export default class BarGraph extends PureComponent {
 
   render() {
     let dataKeys = this.props.dataKey.split(";");
-    let rgba = "rgba(" + hexToRgb("#8884d8") + ",.62)";
     let keys = [];
     for(let i = 0; i < this.props.topics; i++) {
       keys.push(i);
@@ -41,16 +44,29 @@ export default class BarGraph extends PureComponent {
         {
           this.props.shared ? (
             <YAxis yAxisId={1} orientation="right">
-              <Label value={dataKeys[1]} offset={0} position="insideTopRight" angle={-90}/>
+              <Label value={dataKeys[1]} offset={0} position="insideTopRight" offset={100} angle={-90}/>
             </YAxis>
           ) : ("")
-        } 
-        <Tooltip content={<CustomTooltip />}/>
+        }
+        <Tooltip />
+        {
+          this.props.brush ? (
+            <Brush dataKey={this.props.xAxisDataKey} y={300} height={30} stroke="#8884d8" />
+          ) : ("")
+        }
         {
           !this.props.stack ? dataKeys.map((key, i) => (
-            <Bar key={key} yAxisId={this.props.shared ? i : 0} dataKey={key} fill={i == 0 ? "#f5f5f5" : rgba} />
+            <Bar 
+              key={key} 
+              yAxisId={this.props.shared ? i : 0}
+              dataKey={key} 
+              fill={i > 0 ? rgba(this.props.colors[i]) : this.props.colors[i]} />
           )) : keys.map((key, i) => (
-            <Bar key={key} stackId={"a"} dataKey={"Tópico " + key} fill={i%2 === 0 ? "#8884d8" : "#82ca9d"} />
+            <Bar 
+              key={key} 
+              stackId={"a"} 
+              dataKey={"Tópico " + key} 
+              fill={this.props.colors["Tópico " + key]} />
           ))
         }
       </BarChart>

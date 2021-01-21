@@ -256,6 +256,7 @@ export default function Dashboard(props) {
                     topics={props.parameters.topics}
                     loading={loading}
                     tweets={tweets}
+                    colors={colors}
                   />
                 )
               },
@@ -267,6 +268,7 @@ export default function Dashboard(props) {
                     topics={props.parameters.topics}
                     loading={loading}
                     modelInfo={modelInfo}
+                    colors={colors}
                   />
                 )
               },
@@ -279,6 +281,7 @@ export default function Dashboard(props) {
                     dates={dates}
                     loading={loading}
                     topics={props.parameters.topics}
+                    colors={colors}
                   />
                 )
               },

@@ -1,6 +1,8 @@
 import React from "react";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
+// @material-ui/icons
+import Time from "@material-ui/icons/Schedule";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 // core components
@@ -41,7 +43,10 @@ export default function TimeAnalysis(props) {
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card chart>
-            <CardHeader color="info">
+            <CardHeader stats icon color="info">
+              <CardIcon color="info">
+                <Time />
+              </CardIcon>
               <h3 className={classes.cardTitle}>{`Evolución de los tópicos en el tiempo`}</h3>
             </CardHeader>
             <div ref={ref}>
@@ -53,6 +58,7 @@ export default function TimeAnalysis(props) {
                   width={width}
                   topics={props.topics}
                   data={getDateCount(props.dates, false).slice(1,50)}
+                  colors={props.colors}
                 />
               )}
             </CardBody>
@@ -70,6 +76,7 @@ export default function TimeAnalysis(props) {
         dates={props.dates}
         loading={props.loading}
         topics={props.topics}
+        colors={props.colors}
       />
     </div>
   );

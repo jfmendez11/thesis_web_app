@@ -1,6 +1,8 @@
 import React from "react";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
+// @material-ui/icons
+import Twitter from "@material-ui/icons/Twitter";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 import Pagination from '@material-ui/lab/Pagination';
@@ -49,7 +51,13 @@ export default function TweetAnalysis(props) {
       <GridContainer>
       <GridItem xs={12} sm={12} md={12}>
           <Card chart>
-            <CardHeader color="info">
+            <CardHeader stats icon color="info">
+              <CardIcon color="info">
+                <Twitter />
+              </CardIcon>
+              <h3 className={classes.cardTitle}>
+                Acerca de los Twits
+              </h3>
             </CardHeader>
             <CardBody>
             {props.loading ? <Skeleton /> : props.tweets.slice(currentPage*10,(currentPage+1)*10).map(((tweet, i) => (

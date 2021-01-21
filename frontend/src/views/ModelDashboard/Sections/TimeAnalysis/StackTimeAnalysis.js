@@ -1,6 +1,8 @@
 import React from "react";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
+// @material-ui/icons
+import Time from "@material-ui/icons/Schedule";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 // core components
@@ -8,6 +10,7 @@ import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
+import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import BarGraph from "components/Charts/BarChart.js";
@@ -54,10 +57,11 @@ const getRelevanceByAccount = (tweets) => {
     let finalObject = {};
     finalObject["Cuenta"] = account;
     Object.keys(accountsObj[account]).forEach(topic => {
-      if(topic !== "Total") {
+      if(topic !== "Total" && topic !== "Cuenta") {
         finalObject[topic] = accountsObj[account][topic]/accountsObj[account]["Total"];
       }
     });
+    
     accountsArray.push(finalObject);
   }
   return accountsArray;
@@ -72,10 +76,11 @@ export default function StackTimeAnalysis(props) {
     <GridContainer>
       <GridItem xs={12} sm={12} md={6}>
         <Card chart>
-          <CardHeader color="info">
-            <GridItem md={12}>
-              <h3 className={classes.cardTitle}>{`Relevancia del tópico en el tiempo`}</h3>
-            </GridItem>
+          <CardHeader stats icon color="info">
+            <CardIcon color="info">
+              <Time />
+            </CardIcon>
+            <h3 className={classes.cardTitle}>{`Relevancia del tópico en el tiempo`}</h3>
           </CardHeader>
           <div ref={ref}>
             <CardBody>
@@ -84,11 +89,14 @@ export default function StackTimeAnalysis(props) {
             ) : (
               <BarGraph
                 stack
+                brush
                 width={width}
                 xAxisDataKey={"Fecha"}
                 dataKey="% de relevancia"
                 topics={props.topics}
                 data={getDateCount(props.dates, true).slice(1,50)}
+                angle={-60}
+                colors={props.colors}
               />
             )}
             </CardBody>
@@ -102,10 +110,11 @@ export default function StackTimeAnalysis(props) {
       </GridItem>
       <GridItem xs={12} sm={12} md={6}>
         <Card chart>
-          <CardHeader color="info">
-            <GridItem md={12}>
-              <h3 className={classes.cardTitle}>{`Relevancia del tópico por cuenta`}</h3>
-            </GridItem>
+          <CardHeader stats icon color="info">
+            <CardIcon color="info">
+              <Time />
+            </CardIcon>
+            <h3 className={classes.cardTitle}>{`Relevancia del tópico por cuenta`}</h3>
           </CardHeader>
           <CardBody>
           {props.loading ? (
@@ -118,6 +127,8 @@ export default function StackTimeAnalysis(props) {
               dataKey="% de relevancia"
               topics={props.topics}
               data={getRelevanceByAccount(props.tweets)}
+              angle={-60}
+              colors={props.colors}
             />
           )}
           </CardBody>

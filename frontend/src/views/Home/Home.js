@@ -1,5 +1,12 @@
 import React from "react";
 import moment from "moment";
+import {
+  successColor,
+  infoColor,
+  whiteColor,
+  grayColor,
+  hexToRgb
+} from "assets/jss/material-dashboard-react.js";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
@@ -181,7 +188,7 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
     <GridItem xs={12} sm={12} md={12}>
       <h5>Número de tópicos</h5>
       <SnackbarContent 
-        message={(<Chip label={`Tópicos: ${parameters.topics}`} color="secondary" onDelete={() => handleDelete("topics", null)}/>)} 
+        message={(<Chip label={`Tópicos: ${parameters.topics}`} color="primary" onDelete={() => handleDelete("topics", null)}/>)} 
         icon={TopicsIcon}
       />
     </GridItem>;
@@ -198,7 +205,7 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
     dateKeys.push("end");
   }
   if(dateComponents.length) {
-    dateSection = <ul>{dateComponents.map((message, i) => (<Chip key={message} color="secondary" label={message} onDelete={() => handleDelete(dateKeys[i], null)} />))}</ul>
+    dateSection = <ul>{dateComponents.map((message, i) => (<Chip key={message} color="primary" label={message} onDelete={() => handleDelete(dateKeys[i], null)} />))}</ul>
   }
 
   let accountsSection = null;
@@ -208,7 +215,7 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
         <GridItem key={account} xs={12} sm={6} md={3}>
           <Chip
             icon={<At />}
-            color="secondary"
+            color="primary"
             label={account}
             onDelete={() => handleDelete("accounts", account)}
           />
@@ -221,7 +228,7 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
   return (
     <GridItem xs={12} sm={12} md={6}>
       <Card>
-        <CardHeader color="warning">
+        <CardHeader color="primary">
           <h4 className={classes.cardTitleWhite}>Parametros seleccionados</h4>
           <p className={classes.cardCategoryWhite}>
             Acá podrás ver los parámetros seleccionados para ejecutar el modelo
@@ -245,6 +252,7 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
             <GridItem xs={12} sm={12} md={12}>
               <h5>Selecciona los datos del modelo</h5>
              <Radio
+              color="primary"
               checked={!parameters["hashtagmodel"] || parameters["hashtagmodel"] === "0"}
               onChange={handleChange}
               value="0"
@@ -252,6 +260,7 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
             /> Modelo sobre los Twits
             <br />
             <Radio
+              color="primary"
               checked={parameters['hashtagmodel'] === "1"}
               onChange={handleChange}
               value="1"

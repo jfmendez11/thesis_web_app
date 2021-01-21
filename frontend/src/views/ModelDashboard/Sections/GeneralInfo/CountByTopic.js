@@ -1,6 +1,8 @@
 import React from "react";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
+// @material-ui/core
+import Stats from "@material-ui/icons/InsertChart";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 // core components
@@ -8,6 +10,7 @@ import ComposedGraph from "components/Charts/ComposedChart.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
+import CardIcon from "components/Card/CardIcon.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
@@ -53,8 +56,13 @@ export default function CountByTopic(props) {
       {(props.loading ? Array.from(new Array(Number(props.topics))) : getDocumentWordCountByTopics(props.tweets)).map((data, i) => (
         <GridItem key={`generalinfo-graph1-${i}`} xs={12} sm={12} md={6}>
           <Card chart>
-            <CardHeader color="warning">
-              <h3 className={classes.cardTitle}>{`Cuenta por Tópico Dominante - Tópico ${i}`}</h3>
+            <CardHeader stats icon color="info">
+              <CardIcon color="info">
+                <Stats />
+              </CardIcon>
+              <h3 className={classes.cardTitle}>
+                {"Información del Tópico " + i}
+              </h3>
             </CardHeader>
             <div ref={ref}>
               <CardBody>

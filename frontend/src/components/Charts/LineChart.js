@@ -1,7 +1,21 @@
 import React, { PureComponent } from 'react';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Brush,
 } from 'recharts';
+
+class CustomizedAxisTick extends PureComponent {
+  render() {
+    const {
+      x, y, payload,
+    } = this.props;
+
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text x={0} y={0} dy={16} textAnchor="end" fill="#666" transform="rotate(-35)">{payload.value}</text>
+      </g>
+    );
+  }
+}
 
 export default class LineGraph extends PureComponent {
   constructor(props) {
@@ -23,12 +37,19 @@ export default class LineGraph extends PureComponent {
         }}
       >
         <CartesianGrid stroke="#f5f5f5" />
-        <XAxis dataKey="Fecha" interval={0} />
+        <XAxis dataKey="Fecha" interval={0} tick={<CustomizedAxisTick />}/>
         <YAxis />
         <Tooltip />
         <Legend />
+        <Brush dataKey="Fecha" height={30} stroke="#8884d8"/>
         {keys.map(topic => (
-           <Line key={"millosdavid@" + topic} connectNulls type="monotone" dataKey={"Tópico " + topic} stroke={topic%2 === 0 ? "#8884d8" : "#82ca9d"} />
+          <Line 
+            key={"millosdavid@" + topic} 
+            connectNulls 
+            type="monotone" 
+            dataKey={"Tópico " + topic} 
+            stroke={this.props.colors["Tópico " + topic]} 
+          />
         ))
         }
       </LineChart>

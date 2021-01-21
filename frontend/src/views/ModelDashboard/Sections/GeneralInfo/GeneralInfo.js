@@ -2,7 +2,7 @@ import React from "react";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
-import Stats from "@material-ui/icons/InsertChart"
+import Stats from "@material-ui/icons/InsertChart";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 // core components
@@ -79,8 +79,8 @@ export default function GeneralInfo(props) {
       <GridContainer>
         <GridItem xs={12} sm={12} md={12}>
           <Card>
-            <CardHeader stats icon color="success">
-              <CardIcon color="success">
+            <CardHeader stats icon color="info">
+              <CardIcon color="info">
                 <Stats />
               </CardIcon>
               <h3 className={classes.cardTitle}>
@@ -94,6 +94,7 @@ export default function GeneralInfo(props) {
                 ) : (
                   <BarGraph 
                     width={width} 
+                    colors={["#8884d8"]}
                     data={getDistributionOfDocs(props.tweets)} 
                     xAxisDataKey="Palabras por documento"
                     dataKey="Cantidad de documentos"
@@ -113,6 +114,7 @@ export default function GeneralInfo(props) {
         topics={props.topics}
         tweets={props.tweets}
         loading={props.loading}
+        colors={props.colors}
       />
     </div>
   );

@@ -1,6 +1,8 @@
 import React from "react";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
+// @material-ui/icons
+import Stats from "@material-ui/icons/InsertChart";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 // core components
@@ -60,8 +62,13 @@ export default function TopicInfo(props) {
         {(props.loading ? Array.from(new Array(Number(props.topics))) : getTopicWordCountAndImportance(props.modelInfo)).map((data, i) => (
           <GridItem key={`topicinfo-graph1-${i}`} xs={12} sm={12} md={6}>
             <Card chart>
-              <CardHeader color="danger">
-                <h3 className={classes.cardTitle}>{`Importancia y cuenta del Tópico ${i}`}</h3>
+              <CardHeader stats icon color="info">
+                <CardIcon color="info">
+                  <Stats />
+                </CardIcon>
+                <h3 className={classes.cardTitle}>
+                 {`Importancia y cuenteo del Tópico ${i}`}
+                </h3>
               </CardHeader>
               <div ref={ref}>
               <CardBody>
@@ -70,6 +77,7 @@ export default function TopicInfo(props) {
                     shared
                     width={width} 
                     data={data} 
+                    colors={[props.colors["Tópico " + i], props.colors["Tópico " + i]]}
                     xAxisDataKey="Palabras del tópico" 
                     dataKey="Cantidad de palabras por tópico dominante;Peso de la palabra en el tópico"
                     angle={-30}
@@ -92,14 +100,20 @@ export default function TopicInfo(props) {
         {(props.loading ? Array.from(new Array(Number(2))) : getTopicDocumentCount(props.modelInfo)).map((data, i) => (
           <GridItem key={`topicinfo-graph2-${i}`} xs={12} sm={12} md={6}>
             <Card chart>
-              <CardHeader color="info">
-                <h3 className={classes.cardTitle}>{`Cuenta por Tópico Dominante`}</h3>
+              <CardHeader stats icon color="info">
+                <CardIcon color="info">
+                  <Stats />
+                </CardIcon>
+                <h3 className={classes.cardTitle}>
+                 {`Conteo por dominancia del tópico ${i}`}
+                </h3>
               </CardHeader>
               <CardBody>
                 {data ? (
                   <BarGraph
                     width={width}
-                    data={data} 
+                    data={data}
+                    colors={i%2 == 0 ? ["#8884d8"] : ["#82ca9d"]}
                     xAxisDataKey="Tópico" 
                     dataKey={countDataKeys[i]}
                     angle={-30}

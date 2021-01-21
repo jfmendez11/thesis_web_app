@@ -53,12 +53,12 @@ export default function Admin({ ...rest }) {
     console.log(modelParameters);
     setIsDashboardDisabled(false);
     if(modelParameters.start) {
-      modelParameters.start = moment(modelParameters.start).format("YYYY-MM-DD")  + " 00:00:00.0";
+      modelParameters.start = moment(modelParameters.start, "DD/MM/YYYY").format("YYYY-MM-DD")  + " 00:00:00.0";
     }
     if(modelParameters.end) {
-      modelParameters.end = moment(modelParameters.end).format("YYYY-MM-DD") + " 23:59:59.9";
+      modelParameters.end = moment(modelParameters.end, "DD/MM/YYYY").format("YYYY-MM-DD") + " 23:59:59.9";
     }
-    modelParameters.accounts = Object.keys(modelParameters.accounts).join(" ");
+    modelParameters.accounts = Object.keys(modelParameters.accounts).filter(account => modelParameters.accounts[account]).join(" ");
     setParameters(modelParameters);
   }
 
