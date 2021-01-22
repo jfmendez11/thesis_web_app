@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
@@ -13,7 +14,6 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
-import BarGraph from "components/Charts/BarChart.js";
 import LineGraph from "components/Charts/LineChart.js";
 import StackTimeAnalysis from "./StackTimeAnalysis.js";
 
@@ -22,7 +22,11 @@ import useDimensions from "react-cool-dimensions";
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
 const getDateCount = (dates, percentage) => {
-  return Object.keys(dates).reverse().map((date) => {
+  return Object.keys(dates).sort((a,b) => {
+    let dateA = moment(a, "DD MMM YYYY");
+    let dateB = moment(b, "DD MMM YYYY")
+    return dateA.diff(dateB, 'days');
+  }).map((date) => {
     let formattedDateObj = {
       "Fecha": date,
     };
@@ -57,7 +61,7 @@ export default function TimeAnalysis(props) {
                 <LineGraph
                   width={width}
                   topics={props.topics}
-                  data={getDateCount(props.dates, false).slice(1,50)}
+                  data={getDateCount(props.dates, false)}
                   colors={props.colors}
                 />
               )}

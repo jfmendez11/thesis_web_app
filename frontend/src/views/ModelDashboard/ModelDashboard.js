@@ -1,13 +1,11 @@
 import React from "react";
 import moment from "moment";
-import { TagCloud } from 'react-tagcloud'
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 // @material-ui/icons
 import DateRange from "@material-ui/icons/DateRange";
-import AccessTime from "@material-ui/icons/AccessTime";
 import Accessibility from "@material-ui/icons/Accessibility";
 import Twitter from '@material-ui/icons/Twitter'
 import TopicsIcon from "@material-ui/icons/PermDataSetting";

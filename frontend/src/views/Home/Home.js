@@ -1,15 +1,6 @@
 import React from "react";
-import moment from "moment";
-import {
-  successColor,
-  infoColor,
-  whiteColor,
-  grayColor,
-  hexToRgb
-} from "assets/jss/material-dashboard-react.js";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
 import Checkbox from "@material-ui/core/Checkbox";
 import Chip from '@material-ui/core/Chip';
 import Radio from '@material-ui/core/Radio';
@@ -34,11 +25,9 @@ import At from "@material-ui/icons/AlternateEmailSharp";
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import CustomTabs from "components/CustomTabs/CustomTabs.js";
-import Danger from "components/Typography/Danger.js";
 import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardAvatar from "components/Card/CardAvatar.js";
-import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import SnackbarContent from "components/Snackbar/SnackbarContent.js";

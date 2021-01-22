@@ -14,7 +14,6 @@ import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
 import CardFooter from "components/Card/CardFooter.js";
 import BarGraph from "components/Charts/BarChart.js";
-import ComposedGraph from "components/Charts/ComposedChart.js";
 import CountByTopic from "./CountByTopic.js";
 
 import useDimensions from "react-cool-dimensions";
@@ -41,34 +40,6 @@ const getDistributionOfDocs = (tweets) => {
     };
   });
   return docsDistribution
-};
-
-const getDocumentWordCountByTopics = (tweets) => {
-  let topicsArray = [];
-  for(let tweet of tweets) {
-    let topicObj = topicsArray[tweet.dominant_topic];
-    let docLength = tweet.tokenized_text.length;
-    if(topicObj) {
-      if(topicObj[docLength]) {
-        topicObj[docLength] += 1;
-      } else {
-        topicObj[docLength] = 1;
-      }
-    } else {
-      let topicObj = {};
-      topicObj[docLength] = 1;
-      topicsArray[tweet.dominant_topic] = topicObj;
-    }
-  }
-  for(let i = 0; i < topicsArray.length; i++) {
-    topicsArray[i] = Object.keys(topicsArray[i]).map((docLength) => {
-      return {
-        "Cantidad de documentos": topicsArray[i][docLength],
-        "Palabras por documento": docLength,
-      };
-    });
-  }
-  return topicsArray;
 };
 
 export default function GeneralInfo(props) {
@@ -100,6 +71,7 @@ export default function GeneralInfo(props) {
                     dataKey="Cantidad de documentos"
                   />
                 )}
+                <h5 style={{textAlign: "center", marginTop: 0}}>Palabras por documento</h5>
               </CardBody>
             </div>
             <CardFooter chart>

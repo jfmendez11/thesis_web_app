@@ -24,8 +24,8 @@ const getTopicWordCountAndImportance = (modelInfo) => {
     let words = Object.keys(modelInfo[topic].words).map((word) => {
       return {
         "Palabras del tópico": word,
-        "Cantidad de palabras por tópico dominante": modelInfo[topic].words[word].count,
-        "Peso de la palabra en el tópico": modelInfo[topic].words[word].importance
+        "Frecuencia por tópico dominante": modelInfo[topic].words[word].count,
+        "Peso de la palabra en el tópico": modelInfo[topic].words[word].importance.toFixed(3),
       };
     });
     topicsArray.push(words);
@@ -67,7 +67,7 @@ export default function TopicInfo(props) {
                   <Stats />
                 </CardIcon>
                 <h3 className={classes.cardTitle}>
-                 {`Importancia y cuenteo del Tópico ${i}`}
+                 {`Importancia y conteo del Tópico ${i}`}
                 </h3>
               </CardHeader>
               <div ref={ref}>
@@ -77,14 +77,16 @@ export default function TopicInfo(props) {
                     shared
                     width={width} 
                     data={data} 
+                    xAxisHeight={100}
                     colors={[props.colors["Tópico " + i], props.colors["Tópico " + i]]}
                     xAxisDataKey="Palabras del tópico" 
-                    dataKey="Cantidad de palabras por tópico dominante;Peso de la palabra en el tópico"
+                    dataKey="Frecuencia por tópico dominante;Peso de la palabra en el tópico"
                     angle={-30}
                   />
                 ) : (
                   <Skeleton width="100%" height={300} />
                 )}
+                <h5 style={{textAlign: "center", marginTop: 0}}>Palabras del tópico</h5>
               </CardBody>
               </div>
               <CardFooter chart>
@@ -113,7 +115,7 @@ export default function TopicInfo(props) {
                   <BarGraph
                     width={width}
                     data={data}
-                    colors={i%2 == 0 ? ["#8884d8"] : ["#82ca9d"]}
+                    colors={i%2 === 0 ? ["#8884d8"] : ["#82ca9d"]}
                     xAxisDataKey="Tópico" 
                     dataKey={countDataKeys[i]}
                     angle={-30}
@@ -121,6 +123,7 @@ export default function TopicInfo(props) {
                 ) : (
                   <Skeleton width="100%" height={300} />
                 )}
+                <h5 style={{textAlign: "center", marginTop: 0}}>Tópico</h5>
               </CardBody>
               <CardFooter chart>
                 <div className={classes.stats}>

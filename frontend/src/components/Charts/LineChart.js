@@ -18,10 +18,6 @@ class CustomizedAxisTick extends PureComponent {
 }
 
 export default class LineGraph extends PureComponent {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let keys = [];
     for(let i = 0; i < this.props.topics; i++) {
@@ -37,11 +33,11 @@ export default class LineGraph extends PureComponent {
         }}
       >
         <CartesianGrid stroke="#f5f5f5" />
-        <XAxis dataKey="Fecha" interval={0} tick={<CustomizedAxisTick />}/>
+        <XAxis dataKey="Fecha" interval={0} height={76} tick={<CustomizedAxisTick />}/>
         <YAxis />
         <Tooltip />
         <Legend />
-        <Brush dataKey="Fecha" height={30} stroke="#8884d8"/>
+        <Brush dataKey="Fecha" startIndex={0} endIndex={39} stroke="#8884d8"/>
         {keys.map(topic => (
           <Line 
             key={"millosdavid@" + topic} 

@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import {
-  PieChart, Pie, Sector, Cell, Tooltip,
+  PieChart, Pie, Cell, Tooltip,
 } from 'recharts';
 
 const RADIAN = Math.PI / 180;
@@ -19,9 +19,6 @@ const renderCustomizedLabel = ({
 };
 
 export default class PieGraph extends PureComponent {
-  constructor(props) {
-    super(props);
-  }
   render() {
     return (
       <PieChart width={200} height={200}>

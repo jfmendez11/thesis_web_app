@@ -1,4 +1,5 @@
 import React from "react";
+import moment from "moment";
 // @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
@@ -19,13 +20,17 @@ import useDimensions from "react-cool-dimensions";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
-const getDateCount = (dates, percentage) => {
-  return Object.keys(dates).reverse().map((date) => {
+const getDateCount = (dates) => {
+  return Object.keys(dates).sort((a,b) => {
+    let dateA = moment(a, "DD MMM YYYY");
+    let dateB = moment(b, "DD MMM YYYY")
+    return dateA.diff(dateB, 'days');
+  }).map((date) => {
     let formattedDateObj = {
       "Fecha": date,
     };
     for(let topic in dates[date]) {
-      formattedDateObj[topic] = percentage ? dates[date][topic]/dates[date]["Total"] : dates[date][topic];
+      formattedDateObj[topic] = (dates[date][topic]/dates[date]["Total"]).toFixed(3);
     }
     return formattedDateObj;
   });
@@ -58,7 +63,7 @@ const getRelevanceByAccount = (tweets) => {
     finalObject["Cuenta"] = account;
     Object.keys(accountsObj[account]).forEach(topic => {
       if(topic !== "Total" && topic !== "Cuenta") {
-        finalObject[topic] = accountsObj[account][topic]/accountsObj[account]["Total"];
+        finalObject[topic] = (accountsObj[account][topic]/accountsObj[account]["Total"]).toFixed(3);
       }
     });
     
@@ -90,16 +95,19 @@ export default function StackTimeAnalysis(props) {
               <BarGraph
                 stack
                 brush
+                hasInterval
                 width={width}
+                xAxisHeight={70}
                 xAxisDataKey={"Fecha"}
                 dataKey="% de relevancia"
                 topics={props.topics}
-                data={getDateCount(props.dates, true).slice(1,50)}
+                data={getDateCount(props.dates)}
                 angle={-60}
                 colors={props.colors}
               />
             )}
             </CardBody>
+            <h5 style={{textAlign: "center", marginTop: 0}}>Fecha</h5>
           </div>
           <CardFooter chart>
             <div className={classes.stats}>
@@ -123,6 +131,7 @@ export default function StackTimeAnalysis(props) {
             <BarGraph
               stack
               width={width}
+              xAxisHeight={70}
               xAxisDataKey={"Cuenta"}
               dataKey="% de relevancia"
               topics={props.topics}
@@ -131,6 +140,7 @@ export default function StackTimeAnalysis(props) {
               colors={props.colors}
             />
           )}
+           <h5 style={{textAlign: "center", marginTop: 0}}>Cuenta</h5>
           </CardBody>
           <CardFooter chart>
             <div className={classes.stats}>

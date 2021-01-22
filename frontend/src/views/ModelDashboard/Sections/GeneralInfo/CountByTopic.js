@@ -6,7 +6,7 @@ import Stats from "@material-ui/icons/InsertChart";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 // core components
-import ComposedGraph from "components/Charts/ComposedChart.js";
+import BarGraph from "components/Charts/BarChart.js";
 import GridContainer from "components/Grid/GridContainer.js";
 import GridItem from "components/Grid/GridItem.js";
 import Card from "components/Card/Card.js";
@@ -67,10 +67,16 @@ export default function CountByTopic(props) {
             <div ref={ref}>
               <CardBody>
                 {data ? (
-                  <ComposedGraph width={width} data={data} xAxisDataKey="Palabras por documento" dataKey="Cantidad de documentos"/>
+                  <BarGraph 
+                    width={width} 
+                    colors={["#8884d8"]} 
+                    data={data}
+                    xAxisDataKey="Palabras por documento" 
+                    dataKey="Cantidad de documentos"/>
                 ) : (
                   <Skeleton width="100%" height={300} />
                 )}
+                <h5 style={{textAlign: "center", marginTop: 0}}>Palabras por documento</h5>
               </CardBody>
             </div>
             <CardFooter chart>
