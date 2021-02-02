@@ -3,6 +3,8 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 // @material-ui/icons
 import Twitter from "@material-ui/icons/Twitter";
+import Favorite from "@material-ui/icons/Favorite";
+import Retweets from "@material-ui/icons/Loop";
 // @material-ui/lab
 import Skeleton from '@material-ui/lab/Skeleton';
 import Pagination from '@material-ui/lab/Pagination';
@@ -68,7 +70,17 @@ export default function TweetAnalysis(props) {
                     })}
                   </GridItem>
                   <GridItem md={4}>
-                    <p>{tweet.text}</p>
+                    <Card>
+                      <CardBody>
+                        <p>{tweet.text}</p>
+                      </CardBody>
+                      <CardFooter chart>
+                        <div className={classes.stats}>
+                          <Favorite /> {tweet.favorite_count}
+                          <Retweets /> {tweet.retweet_count}
+                        </div>
+                      </CardFooter>
+                    </Card>
                   </GridItem>
                   <GridItem md={4}>
                     <PieGraph

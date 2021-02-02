@@ -21,6 +21,7 @@ import CalendarIcon from "@material-ui/icons/DateRange";
 import ProfileIcon from "@material-ui/icons/SupervisedUserCircle";
 import Check from "@material-ui/icons/Check";
 import At from "@material-ui/icons/AlternateEmailSharp";
+import Spellcheck from "@material-ui/icons/Spellcheck";
 // core components
 import GridItem from "components/Grid/GridItem.js";
 import GridContainer from "components/Grid/GridContainer.js";
@@ -122,6 +123,28 @@ const renderParameterSelector = (users, accounts, handleToggle, onChange, classe
                 </GridContainer>
               )
             },
+            {
+              tabName: "PALABRAS CLAVE",
+              tabIcon: Spellcheck,
+              tabContent: (
+                <GridContainer>
+                  <GridItem xs={12} sm={12} md={6}>
+                    <CustomInput
+                      labelText="Agregar palabra clave"
+                      id="keywords"
+                      formControlProps={{
+                        fullWidth: true
+                      }}
+                      inputProps={{
+                        name: "keywords",
+                        type: "text",
+                        onChange: onChange,
+                      }}
+                    />
+                  </GridItem>
+                </GridContainer>
+              )
+            },
           ]} 
         />
       </GridItem>
@@ -212,7 +235,19 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
       ) : (
       <div key={account}></div>
       )
-    ))
+    ));
+
+  let keywordsSection = null;
+  if(parameters.keywords) keywordsSection = parameters.keywords.split(" ").map((word) => (
+    <GridItem key={word} xs={12} sm={6} md={3}>
+      <Chip
+        icon={<Spellcheck />}
+        color="primary"
+        label={word}
+        onDelete={() => handleDelete("keywords", word)}
+      />
+    </GridItem>
+  ));
 
   return (
     <GridItem xs={12} sm={12} md={6}>
@@ -233,9 +268,16 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
 
             {accountsSection ?
             <div>
-              <h5>Ceuntas Seleccionadas</h5>
+              <h5>Cuentas Seleccionadas</h5>
               <GridContainer>
                 {accountsSection}
+              </GridContainer> 
+            </div>: ""}
+            {keywordsSection ?
+            <div>
+              <h5>Palabras clave</h5>
+              <GridContainer>
+                {keywordsSection}
               </GridContainer> 
             </div>: ""}
             <GridItem xs={12} sm={12} md={12}>
@@ -255,6 +297,14 @@ const renderSelectedParameters = (parameters, classes, handleDelete, handleChang
               value="1"
               name="hashtagmodel"
             /> Modelo sobre los hashtags (#)
+            <br />
+            <Radio
+              color="primary"
+              checked={parameters['hashtagmodel'] === "2"}
+              onChange={handleChange}
+              value="2"
+              name="hashtagmodel"
+            /> Modelo sobre ambos
             </GridItem>
         </CardBody>
       </Card>
@@ -304,7 +354,7 @@ const validParameters = (parameters) => {
   console.log(parameters);
   let topicsNumber = Number(parameters.topics);
   if(!topicsNumber || topicsNumber < 1) return false;
-  if(parameters.hashtagmodel && !(parameters.hashtagmodel === "1" || parameters.hashtagmodel === "0")) return false;
+  if(parameters.hashtagmodel && !(parameters.hashtagmodel === "2" || parameters.hashtagmodel === "1" || parameters.hashtagmodel === "0")) return false;
   if(Object.keys(parameters.accounts).filter(account => parameters.accounts[account]).length === 0) return false;
   return true;
 };
@@ -337,14 +387,22 @@ export default function Home(props) {
     });
   };
 
-  const handleDelete = (parameter, account) => {
-    if(account) {
+  const handleDelete = (parameter, value) => {
+    if(parameter === "accounts") {
       let accounts = parameters["accounts"];
-        accounts[account] = false
+        accounts[value] = false
         setParameters({
           ...parameters,
           ["accounts"]: accounts,
         });
+    } else if (parameter === "keywords") {
+      let keywords = parameters["keywords"];
+      keywords = keywords.replace(value, "");
+      keywords = keywords.trim();
+      setParameters({
+        ...parameters,
+        ["keywords"]: keywords,
+      })
     } else {
       setParameters({
         ...parameters,

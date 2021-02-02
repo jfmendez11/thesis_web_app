@@ -16,6 +16,7 @@ router.get('/', function(req, res, next) {
   if(req.query.end) args.push('--end', req.query.end);
   if(req.query.accounts) args.push('--accounts', req.query.accounts);
   if(req.query.hashtagmodel) args.push('--hashtagmodel', req.query.hashtagmodel);
+  if(req.query.keywords) args.push('--keywords', req.query.keywords)
 
   let child = spawn('python3', args);
 
