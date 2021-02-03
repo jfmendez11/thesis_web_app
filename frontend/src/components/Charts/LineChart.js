@@ -37,7 +37,7 @@ export default class LineGraph extends PureComponent {
         <YAxis />
         <Tooltip />
         <Legend />
-        <Brush dataKey="Fecha" startIndex={0} endIndex={39} stroke="#8884d8"/>
+        <Brush dataKey="Fecha" startIndex={0} endIndex={this.props.data.length - 1 < 39 ? this.props.data.length - 1 : 39} stroke="#8884d8"/>
         {keys.map(topic => (
           <Line 
             key={"millosdavid@" + topic} 

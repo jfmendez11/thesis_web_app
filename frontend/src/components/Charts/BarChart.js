@@ -62,7 +62,7 @@ export default class BarGraph extends PureComponent {
         <Tooltip />
         {
           this.props.brush ? (
-            <Brush dataKey={this.props.xAxisDataKey} startIndex={0} endIndex={39} stroke="#8884d8" />
+            <Brush dataKey={this.props.xAxisDataKey} startIndex={0} endIndex={this.props.data.length - 1 < 39 ? this.props.data.length - 1 : 39} stroke="#8884d8" />
           ) : ("")
         }
         {
