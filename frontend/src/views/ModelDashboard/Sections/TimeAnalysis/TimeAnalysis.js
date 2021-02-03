@@ -13,7 +13,6 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 import LineGraph from "components/Charts/LineChart.js";
 import StackTimeAnalysis from "./StackTimeAnalysis.js";
 
@@ -67,11 +66,6 @@ export default function TimeAnalysis(props) {
               )}
             </CardBody>
             </div>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                campaign sent 2 days ago
-              </div>
-            </CardFooter>
           </Card>
         </GridItem>
       </GridContainer>

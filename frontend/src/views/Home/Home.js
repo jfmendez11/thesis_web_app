@@ -55,19 +55,53 @@ const renderInformationCard = (classes) => {
           <GridItem xs={12} sm={12} md={6}>
             <h5>Descripción de la herramienta</h5>
             <SnackbarContent
-              message={
-                "This is a notification with close button and icon and have many lines. You can see that the icon and the close button are always vertically aligned. This is a beautiful notification. So you don't have to worry about the style."
-              }
-              icon={InfoIcon}
+              message={(
+                <p>
+                  Esta herramienta fue desarrollada con el fin de proporcionar a la Universidad de Los Andes, un mecanismo mediante el cual le sea posible analizar grande volúmenes de tuits vinculados a la universidad. Dado que Twitter es una fuente con grandes volúmenes de datos, presentes en una plataforma digital desvinculada a la universidad, se pensó que podría complementar los datos ya existentes de la misma, de manera que facilite el proceso de toma de decisiones.
+                  <br />
+                  <br />
+                  La herramienta utiliza la metodología de Modelado de Tópicos, mediante la cual se pueden agrupar los tuits en diferentes tópicos, de acuerdo con su contenido. Esta herramienta en particular utiliza el algoritmo LDA (Latent Dirichlet Allocation) para realizar la agrupación de tuits en tópicos.
+                  <br />
+                  <br />
+                  Se tiene una base de datos en donde se almacenan los tuits relevantes para realizar el modelado de tópicos. Se tiene un proceso que carga los tuits de unas cuentas predefinidas y adicionalmente, cada día a media noche, se cargan los tuits de esas cuentas.
+                  <br />
+                  <br />
+                  El texto de cada tuit es procesado (tokenizado y lematizado) de manera que pueda ser utilizado por el modelo LDA. La tokenización implica generar una lista de palabras de cada tuit y la lematización implica encontrar la forma más simple de cada de palabra (por ejemplo, en vez de tener la palabra daremos, se tiene la palabra dar). Adicionalmente, se remueven los caracteres especiales (puntuación, emojis, etc.) y los conectores o stopwords.
+                  <br />
+                  <br />
+                  Los tuits se pueden filtrar por fecha, cuenta, palabras clave y se puede seleccionar si el modelo se ejecuta sobre el texto, sobre los hashtags o sobre ambos. La fecha mínima es el 03 de marzo de 2020 (fecha en la que se reportó el primer caso de Covid-19 en Colombia).Luego de que el modelo es ejecutado, es posible observar en el dashboard los resultados del modelo:
+                  <br />
+                  <ul>
+                    <li>Palabras más relevantes de cada tópico.</li>
+                    <li>Conteo de palabras por tuit (en total y por tópico).</li>
+                    <li>Importancia de cada palabra dentro de un tópico y la cantidad de veces que esa palabra aparece.</li>
+                    <li>Cantidad de tuits que pertenecen a cada tópico.</li>
+                    <li>Evolución de cada tópico en el tiempo.</li>
+                    <li>Relevancia de cada tópico en el tiempo.</li>
+                    <li>Relevancia de cada tópico por cuenta</li>
+                    <li>Token lematizado de cada tuit y la distribución del tuit en los diferentes tópicos.</li>
+                  </ul>
+                  Para ejecutar la herramienta es necesario especificar la cantidad de tópicos en los cuales se agruparán los tuits. Los otros parámetros son opcionales. En el costado izquierdo, se pueden observar las instrucciones para utilizar la herramienta.
+                </p>
+              )}
             />
           </GridItem>
           <GridItem xs={12} sm={12} md={6}>
             <h5>Instrucciones de uso</h5>
             <SnackbarContent
-              message={
-                '1 - Millos tú papá'
-              }
-              color="info"
+              message={(
+                <ol>
+                  <li>Slecciona el número de tópicos en los cuales deseas agrupar los tuits.</li><br/>
+                  <li>En la siguientes pestañas podrás encontrar otros filtros para los tuits.</li><br/>
+                  <li>En la pestaña de fechas: Selecciona el rango de fechas en del cual deseas analizar los tuits. Por defecto, la fecha mínima es el 03 de marzo de 2020 y la fecha máxima es hoy.</li><br/>
+                  <li>En la pestaña de cuentas: Selecciona las cuentas las cuales deseas analizar tuits. Por defecto, todas están seleccionadas.</li><br/>
+                  <li>En la pestaña de palabras clave: Escribe las palabras clave, las cuales serán utilizadas para filtrar los tuits. Cada vez que espiches la tecla espacio se agregará una nueva palabra.</li><br/>
+                  <li>Al costado izquierdo de la selección de parámetros, podras observar los parámetros que has seleccionado.</li><br/>
+                  <li>Selecciona sobre qué datos deseas hacer el análisis. Puedes ejecutar el modelo con base en el texto de los tuits, con base en los hashtags o con base en ambos.</li><br/>
+                  <li>Al ingresar el número de tópicos, se habilitará un botón para ejecutar el modelo. Dale click una vez hayas seleccionado todos los parámetros.</li><br/>
+                  <li>Al darle click al botón, la herramienta te redirigirá hacía el dashboard, donde podrás observar los resultados del modelo.</li><br/>
+                </ol>
+              )}
             />
           </GridItem>
         </GridContainer>

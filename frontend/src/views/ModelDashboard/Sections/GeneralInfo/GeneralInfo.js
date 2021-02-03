@@ -12,7 +12,6 @@ import Card from "components/Card/Card.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 import BarGraph from "components/Charts/BarChart.js";
 import CountByTopic from "./CountByTopic.js";
 
@@ -74,11 +73,6 @@ export default function GeneralInfo(props) {
                 <h5 style={{textAlign: "center", marginTop: 0}}>Palabras por documento</h5>
               </CardBody>
             </div>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                media = {arr.mean(getDistributionOfDocs(props.tweets).map(a => a["Palabras por documento"]*a["Cantidad de documentos"]))}
-              </div>
-            </CardFooter>
           </Card>
         </GridItem>
       </GridContainer>

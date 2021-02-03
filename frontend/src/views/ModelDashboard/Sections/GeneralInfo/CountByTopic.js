@@ -13,7 +13,6 @@ import Card from "components/Card/Card.js";
 import CardIcon from "components/Card/CardIcon.js";
 import CardHeader from "components/Card/CardHeader.js";
 import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import useDimensions from "react-cool-dimensions";
@@ -79,11 +78,6 @@ export default function CountByTopic(props) {
                 <h5 style={{textAlign: "center", marginTop: 0}}>Palabras por documento</h5>
               </CardBody>
             </div>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                campaign sent 2 days ago
-              </div>
-            </CardFooter>
           </Card>
         </GridItem>
       ))}

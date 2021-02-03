@@ -62,6 +62,17 @@ export default function TweetAnalysis(props) {
               </h3>
             </CardHeader>
             <CardBody>
+              <GridContainer>
+                <GridItem md={4}>
+                  <h5>Tokens Lematizados</h5>
+                </GridItem>
+                <GridItem md={4}>
+                  <h5>Tuit</h5>
+                </GridItem>
+                <GridItem md={4}>
+                  <h5>Distribución de Tópicos</h5>
+                </GridItem>
+              </GridContainer>
             {props.loading ? <Skeleton /> : props.tweets.slice(currentPage*10,(currentPage+1)*10).map(((tweet, i) => (
               <GridContainer key={tweet.tweet_id}>
                   <GridItem md={4}>

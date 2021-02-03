@@ -19,8 +19,6 @@ import ModelDashboardPage from "../views/ModelDashboard/ModelDashboard.js";
 
 import styles from "assets/jss/material-dashboard-react/layouts/adminStyle.js";
 
-import logo from "assets/img/reactlogo.png";
-
 let ps;
 
 const useStyles = makeStyles(styles);
@@ -121,7 +119,6 @@ export default function Admin({ ...rest }) {
       <Sidebar
         routes={routes}
         logoText={"Modelado de Tópicos\nTwits Uniandes"}
-        logo={logo}
         handleDrawerToggle={handleDrawerToggle}
         open={mobileOpen}
         color={color}

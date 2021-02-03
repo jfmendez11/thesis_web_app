@@ -36,7 +36,7 @@ export default function SnackbarContent(props) {
       message={
         <div>
           {icon !== undefined ? <props.icon className={classes.icon} /> : null}
-          <span className={messageClasses}>{message}</span>
+          <p className={messageClasses}>{message}</p>
         </div>
       }
       classes={{
